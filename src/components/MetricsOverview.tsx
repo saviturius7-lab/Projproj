@@ -1,5 +1,4 @@
 import React from 'react';
-import { Users, CalendarCheck, Coins, CheckCircle2 } from 'lucide-react';
 
 interface MetricsOverviewProps {
   activeLaborers: number;
@@ -15,51 +14,65 @@ export const MetricsOverview: React.FC<MetricsOverviewProps> = ({
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
       {/* Metric 1 */}
-      <div className="bg-[#efe4c8] border border-[#8b6f47] rounded-md p-4 shadow-sm flex flex-col justify-between">
-        <div className="flex items-center justify-between text-[#6b5330] mb-1">
-          <span className="text-xs font-semibold uppercase tracking-wider">
-            Active Laborers Verified
+      <div className="manila-folder border-2 border-[#aa8c58] rounded p-4 shadow-sm flex flex-col justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-1.5 border-b border-[#aa8c58]/60 pb-1.5 mb-2">
+          <span className="text-[10px] font-typewriter font-bold uppercase text-[#6f4e24] tracking-wider shrink-0">
+            TAB 01 • ACTIVE ENROLLMENT
           </span>
-          <Users className="w-4 h-4 text-[#7a5a2e]" />
+          <span className="rubber-stamp rubber-stamp-blue text-[8px]">
+            VERIFIED
+          </span>
         </div>
-        <div className="text-3xl font-bold font-display text-[#5a3e1b] mt-1">
-          {activeLaborers}
+        <div className="text-3xl sm:text-4xl font-typewriter font-bold text-[#221910] tracking-tight my-1">
+          {String(activeLaborers).padStart(2, '0')}
         </div>
-        <div className="text-[11px] text-[#7a5a2e] mt-2 flex items-center gap-1 font-serif">
-          <CheckCircle2 className="w-3.5 h-3.5 text-emerald-700" />
-          <span>Biometric & GPS phone verified</span>
+        <div className="text-xs font-serif text-[#684f33] italic leading-tight">
+          Active laborers on field muster roll
+        </div>
+        <div className="mt-2.5 pt-1.5 border-t border-[#aa8c58]/40 text-[10px] font-typewriter text-[#1d3557] font-bold leading-normal">
+          [ REGISTRATION: VERIFIED GPS SATELLITE ]
         </div>
       </div>
 
       {/* Metric 2 */}
-      <div className="bg-[#efe4c8] border border-[#8b6f47] rounded-md p-4 shadow-sm flex flex-col justify-between">
-        <div className="flex items-center justify-between text-[#6b5330] mb-1">
-          <span className="text-xs font-semibold uppercase tracking-wider">
-            Total Man-Days Logged
+      <div className="manila-folder border-2 border-[#aa8c58] rounded p-4 shadow-sm flex flex-col justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-1.5 border-b border-[#aa8c58]/60 pb-1.5 mb-2">
+          <span className="text-[10px] font-typewriter font-bold uppercase text-[#6f4e24] tracking-wider shrink-0">
+            TAB 02 • CUMULATIVE WORKDAYS
           </span>
-          <CalendarCheck className="w-4 h-4 text-[#7a5a2e]" />
+          <span className="rubber-stamp rubber-stamp-green text-[8px]">
+            LOGGED
+          </span>
         </div>
-        <div className="text-3xl font-bold font-display text-[#5a3e1b] mt-1">
-          {totalDays}
+        <div className="text-3xl sm:text-4xl font-typewriter font-bold text-[#221910] tracking-tight my-1">
+          {String(totalDays).padStart(3, '0')}
         </div>
-        <div className="text-[11px] text-[#7a5a2e] mt-2 flex items-center gap-1 font-serif">
-          <span className="font-semibold">₹600.00</span> / guaranteed day rate
+        <div className="text-xs font-serif text-[#684f33] italic leading-tight">
+          Verified man-days logged on ledger
+        </div>
+        <div className="mt-2.5 pt-1.5 border-t border-[#aa8c58]/40 text-[10px] font-typewriter text-[#2d6a4f] font-bold leading-normal">
+          [ MANDATED RATE: ₹600.00 / DAY ]
         </div>
       </div>
 
       {/* Metric 3 */}
-      <div className="bg-[#efe4c8] border border-[#8b6f47] rounded-md p-4 shadow-sm flex flex-col justify-between">
-        <div className="flex items-center justify-between text-[#6b5330] mb-1">
-          <span className="text-xs font-semibold uppercase tracking-wider">
-            Secured Capital
+      <div className="manila-folder border-2 border-[#aa8c58] rounded p-4 shadow-sm flex flex-col justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-1.5 border-b border-[#aa8c58]/60 pb-1.5 mb-2">
+          <span className="text-[10px] font-typewriter font-bold uppercase text-[#6f4e24] tracking-wider shrink-0">
+            TAB 03 • SECURED WAGE CAPITAL
           </span>
-          <Coins className="w-4 h-4 text-[#7a5a2e]" />
+          <span className="rubber-stamp rubber-stamp-red text-[8px]">
+            MANDATORY
+          </span>
         </div>
-        <div className="text-3xl font-bold font-display text-[#5a3e1b] mt-1">
+        <div className="text-3xl sm:text-4xl font-typewriter font-bold text-[#9e2a2b] tracking-tight my-1">
           ₹{totalCapital.toLocaleString('en-IN')}
         </div>
-        <div className="text-[11px] text-[#7a5a2e] mt-2 flex items-center gap-1 font-serif">
-          <span className="text-emerald-800 font-medium">100% dispute-backed collateral</span>
+        <div className="text-xs font-serif text-[#684f33] italic leading-tight">
+          Total locked wage entitlement collateral
+        </div>
+        <div className="mt-2.5 pt-1.5 border-t border-[#aa8c58]/40 text-[10px] font-typewriter text-[#9e2a2b] font-bold leading-normal">
+          [ 100% UNORGANIZED DISPUTE PROOF ]
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { WorkLog } from '../types';
-import { MapPin, Navigation, ExternalLink, Layers } from 'lucide-react';
+import { Compass } from 'lucide-react';
 import L from 'leaflet';
 
 interface LiveMapProps {
@@ -23,7 +23,6 @@ export const LiveMap: React.FC<LiveMapProps> = ({ logs, selectedWorker, onOpenRe
     if (!mapContainerRef.current) return;
 
     if (!mapInstanceRef.current) {
-      // Create map centered on India or first coordinate
       const initialLat = validLocations.length > 0 ? (validLocations[0].latitude as number) : 22.5937;
       const initialLng = validLocations.length > 0 ? (validLocations[0].longitude as number) : 78.9629;
       const initialZoom = validLocations.length > 0 ? 5 : 4;
@@ -32,12 +31,10 @@ export const LiveMap: React.FC<LiveMapProps> = ({ logs, selectedWorker, onOpenRe
         center: [initialLat, initialLng],
         zoom: initialZoom,
         zoomControl: true,
-        scrollWheelZoom: true,
       });
 
-      // CartoDB Positron / OpenStreetMap with sepia/parchment warmth
       L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors | Shramik Sakshi GPS',
+        attribution: '&copy; Geological Survey &amp; Cartographic Field Bureau | Shramik Sakshi',
         maxZoom: 18,
       }).addTo(map);
 
@@ -56,9 +53,9 @@ export const LiveMap: React.FC<LiveMapProps> = ({ logs, selectedWorker, onOpenRe
         className: 'custom-vintage-pin',
         html: `
           <div style="
-            background-color: #7a5a2e;
-            color: #f4ecd8;
-            border: 2px solid #2a1f12;
+            background-color: #9e2a2b;
+            color: #fbf6ea;
+            border: 2px solid #221910;
             border-radius: 50% 50% 50% 0;
             transform: rotate(-45deg);
             width: 28px;
@@ -66,9 +63,9 @@ export const LiveMap: React.FC<LiveMapProps> = ({ logs, selectedWorker, onOpenRe
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.4);
           ">
-            <span style="transform: rotate(45deg); font-size: 13px;">📍</span>
+            <span style="transform: rotate(45deg); font-family: 'Courier Prime', monospace; font-size: 11px; font-weight: bold;">📍</span>
           </div>
         `,
         iconSize: [28, 28],
@@ -87,21 +84,26 @@ export const LiveMap: React.FC<LiveMapProps> = ({ logs, selectedWorker, onOpenRe
           const marker = L.marker([lat, lng], { icon: customIcon });
 
           const popupContent = `
-            <div style="font-family: 'Lora', Georgia, serif; min-width: 180px; padding: 2px;">
-              <h4 style="font-family: 'Playfair Display', Georgia, serif; font-weight: bold; margin: 0 0 4px 0; color: #2a1f12; font-size: 13px; border-bottom: 1px solid #8b6f47; padding-bottom: 2px;">
-                ${log.location_name || 'Verified Work Site'}
-              </h4>
-              <p style="margin: 2px 0; font-size: 11px; color: #5a3e1b;">
+            <div style="font-family: 'Courier Prime', monospace; min-width: 190px; padding: 4px; background: #fbf6ea;">
+              <div style="border-bottom: 2px solid #8b6f47; padding-bottom: 3px; margin-bottom: 4px;">
+                <span style="font-size: 9px; color: #9e2a2b; font-weight: bold; text-transform: uppercase;">
+                  SURVEY LOCATION PIN
+                </span>
+                <h4 style="font-family: 'Special Elite', monospace; font-weight: bold; margin: 2px 0 0 0; color: #221910; font-size: 13px;">
+                  ${log.location_name || 'Field Job Site'}
+                </h4>
+              </div>
+              <p style="margin: 2px 0; font-size: 11px; color: #382819;">
                 <strong>Worker:</strong> ${log.phone_number}
               </p>
-              <p style="margin: 2px 0; font-size: 11px; color: #5a3e1b;">
-                <strong>Daily Wage:</strong> ₹${log.estimated_wage.toFixed(2)}
+              <p style="margin: 2px 0; font-size: 11px; color: #9e2a2b;">
+                <strong>Locked Wage:</strong> ₹${log.estimated_wage.toFixed(2)}
               </p>
-              <p style="margin: 2px 0; font-size: 10px; color: #6b5330;">
+              <p style="margin: 2px 0; font-size: 10px; color: #1d3557;">
                 <strong>GPS:</strong> ${lat.toFixed(4)}, ${lng.toFixed(4)}
               </p>
-              <div style="margin-top: 6px; font-size: 10px; font-weight: 600; color: #2d6a4f;">
-                ✓ GPS Cryptographically Verified
+              <div style="margin-top: 5px; font-size: 9px; font-weight: bold; color: #2d6a4f; border-top: 1px dashed #8b6f47; padding-top: 3px;">
+                [ SATELLITE POSITION VERIFIED ]
               </div>
             </div>
           `;
@@ -115,56 +117,73 @@ export const LiveMap: React.FC<LiveMapProps> = ({ logs, selectedWorker, onOpenRe
       });
 
       if (validLocations.length > 0 && bounds.isValid()) {
-        map.fitBounds(bounds, { padding: [50, 50], maxZoom: 14 });
+        map.fitBounds(bounds, { padding: [40, 40], maxZoom: 14 });
       }
     }
   }, [logs, selectedWorker]);
 
   return (
-    <div className="mb-6">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
-        <h3 className="font-display text-lg sm:text-xl font-bold text-[#2a1f12] flex items-center gap-2">
-          <span>🗺️ Live Deployment Map</span>
-          <span className="text-xs font-normal px-2 py-0.5 rounded bg-[#efe4c8] border border-[#8b6f47] text-[#5a3e1b]">
-            {validLocations.length} Geotagged Pins
+    <div className="manila-folder border-2 border-[#aa8c58] rounded-md p-4 mb-6 shadow-md relative">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 border-b-2 border-[#aa8c58] pb-2.5 mb-3">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-2 mb-1">
+            <span className="text-[10px] font-typewriter font-bold bg-[#6f4e24] text-[#fbf6ea] px-2 py-0.5 rounded-xs shrink-0">
+              FIELD CARTOGRAPHY CHART 'C'
+            </span>
+            <span className="rubber-stamp rubber-stamp-blue text-[8px]">
+              SURVEY PLOT
+            </span>
+          </div>
+          <h3 className="font-typewriter text-lg sm:text-xl font-bold text-[#221910] uppercase flex items-center gap-2 leading-tight">
+            <Compass className="w-4 h-4 text-[#6f4e24] shrink-0" />
+            <span>Geographical Field Deployment Chart</span>
+          </h3>
+          <p className="font-serif italic text-xs text-[#684f33] mt-0.5 leading-normal">
+            Verified satellite coordinates received from WhatsApp pins across labor muster sites
+          </p>
+        </div>
+
+        <div className="shrink-0 self-start sm:self-auto">
+          <span className="bg-[#fbf6ea] border border-[#aa8c58] px-2.5 py-1 rounded text-xs font-typewriter font-bold text-[#9e2a2b] whitespace-nowrap">
+            {validLocations.length} PLOTTED STATIONS
           </span>
-        </h3>
-        <p className="text-xs text-[#6b5330]">
-          Verified WhatsApp GPS coordinates from field job sites across India
-        </p>
+        </div>
       </div>
 
-      <div className="border-2 border-[#8b6f47] rounded-md overflow-hidden bg-[#efe4c8] shadow-sm relative">
-        {/* Map Container */}
+      <div className="border-4 border-[#8b6f47] rounded-sm overflow-hidden shadow-inner bg-[#ebdcb9]">
         <div
           ref={mapContainerRef}
           className="w-full h-80 sm:h-96 z-0"
           style={{ minHeight: '320px' }}
         />
 
-        {/* Floating Quick Legend / Selected info bar */}
-        <div className="bg-[#f7f0de] border-t border-[#8b6f47] p-2.5 px-4 text-xs flex flex-wrap items-center justify-between gap-3">
-          <div className="flex items-center gap-3">
-            <span className="flex items-center gap-1 text-[#3b2f1e]">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#7a5a2e] border border-[#2a1f12]"></span>
-              Active Work Pin
+        {/* Vintage map footer bar - Guaranteed non-overlapping */}
+        <div className="bg-[#fbf6ea] border-t-2 border-[#8b6f47] p-2.5 px-4 text-xs font-typewriter flex flex-wrap items-center justify-between gap-2.5 text-[#221910]">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="flex items-center gap-1.5 shrink-0">
+              <span className="w-3 h-3 rounded-full bg-[#9e2a2b] border border-[#221910] shrink-0"></span>
+              <strong className="text-[11px] whitespace-nowrap">ACTIVE PIN</strong>
             </span>
-            <span className="text-[#8b6f47]">|</span>
-            <span className="text-[#5a3e1b]">
-              Wage Rate Protected: <strong>₹600.00 / day</strong>
+            <span className="hidden sm:inline text-[#aa8c58]">•</span>
+            <span className="text-[11px] text-[#6f4e24] whitespace-nowrap">
+              SCALE: 1:50,000 SURVEY GRID
+            </span>
+            <span className="hidden sm:inline text-[#aa8c58]">•</span>
+            <span className="text-[11px] text-[#2d6a4f] font-bold whitespace-nowrap">
+              GPS PROTOCOL ACTIVE
             </span>
           </div>
 
           {activeSite && (
-            <div className="flex items-center gap-2">
-              <span className="font-medium text-[#2a1f12]">
-                Selected: {activeSite.phone_number} ({activeSite.location_name || 'GPS Site'})
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <span className="font-bold text-[#9e2a2b] text-[11px] whitespace-nowrap">
+                SELECTED: {activeSite.phone_number}
               </span>
               <button
                 onClick={() => onOpenReceipt(activeSite)}
-                className="px-2 py-0.5 rounded bg-[#7a5a2e] text-[#f4ecd8] text-[11px] font-semibold hover:bg-[#5a3e1b]"
+                className="px-2 py-0.5 rounded bg-[#6f4e24] text-[#fbf6ea] text-[10px] font-bold hover:bg-[#4e3314] whitespace-nowrap"
               >
-                Inspect Receipt
+                VIEW VOUCHER
               </button>
             </div>
           )}

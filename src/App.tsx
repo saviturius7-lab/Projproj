@@ -3,6 +3,7 @@ import { WorkLog } from './types';
 import { getStoredLogs, resetStoredLogs, saveStoredLogs } from './services/storage';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
+import { WhatsAppConnectHub } from './components/WhatsAppConnectHub';
 import { MetricsOverview } from './components/MetricsOverview';
 import { WorkerProfile } from './components/WorkerProfile';
 import { LiveMap } from './components/LiveMap';
@@ -17,10 +18,30 @@ export const App: React.FC = () => {
   const [isSimulatorOpen, setIsSimulatorOpen] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
-  // Load logs on mount
+  // Sync logs from backend and localStorage
+  const fetchLogs = async () => {
+    try {
+      const res = await fetch('/api/logs');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.logs && Array.isArray(data.logs) && data.logs.length > 0) {
+          setLogs(data.logs);
+          saveStoredLogs(data.logs);
+          return;
+        }
+      }
+    } catch (e) {
+      // Fallback to client storage
+    }
+    const local = getStoredLogs();
+    setLogs(local);
+  };
+
   useEffect(() => {
-    const stored = getStoredLogs();
-    setLogs(stored);
+    fetchLogs();
+    // Poll backend every 6 seconds for any live incoming WhatsApp webhooks
+    const interval = setInterval(fetchLogs, 6000);
+    return () => clearInterval(interval);
   }, []);
 
   const triggerToast = (msg: string) => {
@@ -30,29 +51,33 @@ export const App: React.FC = () => {
     }, 4000);
   };
 
-  const handleRefresh = () => {
-    const stored = getStoredLogs();
-    setLogs(stored);
-    triggerToast('Ledger successfully re-synchronized with local node.');
+  const handleRefresh = async () => {
+    await fetchLogs();
+    triggerToast('Dossier register synchronized with telex webhook node.');
   };
 
-  const handleResetData = () => {
+  const handleResetData = async () => {
+    try {
+      await fetch('/api/reset', { method: 'POST' });
+    } catch (e) {
+      // Ignored
+    }
     const fresh = resetStoredLogs();
     setLogs(fresh);
     setSelectedWorker('All Workers');
-    triggerToast('Demo records reset to default initial job site logs.');
+    triggerToast('Muster records reset to initial archived dossiers.');
   };
 
   const handleLogCreated = (newLog: WorkLog) => {
     setLogs((prev) => [newLog, ...prev]);
-    triggerToast(`New verified workday recorded for ${newLog.phone_number}!`);
+    triggerToast(`New verified workday voucher issued to ${newLog.phone_number}!`);
   };
 
   const handleQuickCheckIn = () => {
     setIsSimulatorOpen(true);
   };
 
-  // Derive workers
+  // Derive unique workers
   const uniqueWorkers = useMemo(() => {
     const set = new Set<string>();
     logs.forEach((log) => {
@@ -63,7 +88,7 @@ export const App: React.FC = () => {
     return Array.from(set).sort();
   }, [logs]);
 
-  // Filter logs for active selection
+  // Filter logs for selected worker
   const filteredLogs = useMemo(() => {
     if (selectedWorker === 'All Workers') {
       return logs;
@@ -79,24 +104,30 @@ export const App: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#f4ecd8] text-[#3b2f1e] font-serif flex flex-col selection:bg-[#7a5a2e] selection:text-[#f4ecd8]">
+    <div className="min-h-screen bg-[#e5d7b7] text-[#221910] font-typewriter flex flex-col selection:bg-[#6f4e24] selection:text-[#fbf6ea]">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed top-4 right-4 z-50 bg-[#2a1f12] text-[#f7f0de] px-4 py-2.5 rounded shadow-lg text-xs border border-[#8b6f47] flex items-center gap-2 animate-fade-in">
-          <span>✓</span>
+        <div className="fixed top-4 right-4 z-50 bg-[#1a140d] text-[#fbf6ea] px-4 py-2.5 rounded shadow-2xl text-xs border-2 border-[#aa8c58] flex items-center gap-2 animate-bounce">
+          <span className="text-[#9e2a2b] font-bold">●</span>
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Main Container */}
       <div className="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-5 flex-1 flex flex-col">
-        {/* Header */}
+        {/* Pre-Internet Header */}
         <Header
           onOpenSimulator={() => setIsSimulatorOpen(true)}
           onRefresh={handleRefresh}
         />
 
-        {/* Layout: Sidebar + Main Content */}
+        {/* Real WhatsApp Connection & Live Webhook Bridge Hub */}
+        <WhatsAppConnectHub
+          onLogReceived={handleLogCreated}
+          onRefreshLedger={fetchLogs}
+        />
+
+        {/* Layout: Sidebar + Main Registry Content */}
         <div className="flex flex-col lg:flex-row gap-6 items-start flex-1">
           {/* Controls Sidebar */}
           <Sidebar
@@ -110,7 +141,7 @@ export const App: React.FC = () => {
 
           {/* Main Dashboard Section */}
           <main className="flex-1 w-full min-w-0 space-y-6">
-            {/* Top 3 Metrics Row */}
+            {/* Top 3 Physical Ledger Tabs */}
             <MetricsOverview
               activeLaborers={selectedWorker === 'All Workers' ? activeLaborersCount : 1}
               totalDays={totalManDays}
@@ -140,13 +171,13 @@ export const App: React.FC = () => {
           </main>
         </div>
 
-        {/* Footer */}
-        <footer className="mt-12 pt-4 pb-6 border-t border-[#8b6f47]/40 text-center text-xs text-[#6b5330] flex flex-col sm:flex-row items-center justify-between gap-2">
+        {/* Gazette Ledger Footer */}
+        <footer className="mt-12 pt-4 pb-6 border-t-2 border-[#aa8c58] text-center text-[11px] font-typewriter text-[#684f33] flex flex-col sm:flex-row items-center justify-between gap-2">
           <div>
-            <strong>Shramik Sakshi</strong> • Digital Wage Protection for the Unorganized Workforce
+            <strong>GOVERNMENT OF INDIA • UNORGANIZED LABOUR PROTECTION MIGRANT ACT REGISTER</strong>
           </div>
-          <div className="italic">
-            No Apps to Install. WhatsApp Verified GPS Ledger. MIT Open Source.
+          <div className="italic text-[#9e2a2b]">
+            [ OFFICIAL PHYSICAL LEDGER • TELEX NODE #1974 ]
           </div>
         </footer>
       </div>

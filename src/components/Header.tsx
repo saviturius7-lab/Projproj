@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck, MapPin, Receipt, RefreshCw } from 'lucide-react';
+import { RefreshCw, Radio } from 'lucide-react';
 
 interface HeaderProps {
   onOpenSimulator: () => void;
@@ -8,55 +8,71 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onOpenSimulator, onRefresh }) => {
   return (
-    <header className="border-b-2 border-[#8b6f47] pb-4 mb-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-        <div>
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold font-display text-[#2a1f12] tracking-wide flex items-center gap-2">
-            <span>📊 Shramik Sakshi</span>
-            <span className="text-base font-normal px-2.5 py-0.5 rounded border border-[#8b6f47] bg-[#efe4c8] text-[#5a3e1b] inline-flex items-center gap-1">
-              <ShieldCheck className="w-4 h-4 text-[#7a5a2e]" />
-              NGO Command Center
+    <header className="relative mb-6">
+      {/* Top Filing Tab / Gazette Banner */}
+      <div className="flex flex-wrap items-center justify-between border-b-2 border-[#8b6f47] pb-1.5 mb-3 gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <span className="bg-[#6f4e24] text-[#fbf6ea] px-2.5 py-0.5 text-[10px] font-typewriter font-bold uppercase tracking-widest rounded-t shadow-xs shrink-0">
+            DOC. NO. 1974-LAB / GAZETTE
+          </span>
+          <span className="text-[11px] font-typewriter text-[#684f33] hidden md:inline">
+            CONFIDENTIAL UNION COMMAND DESK • UNORGANIZED SECTOR REGISTER
+          </span>
+        </div>
+        <div className="text-[10px] font-typewriter text-[#6f4e24] font-bold shrink-0">
+          EST. MANUAL VERIFICATION ACT
+        </div>
+      </div>
+
+      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+        <div className="min-w-0">
+          <div className="flex flex-wrap items-center gap-3">
+            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-display font-black text-[#221910] tracking-wider uppercase border-b-2 border-[#8b6f47] pb-1 leading-tight">
+              श्रमिक साक्षी • SHRAMIK SAKSHI
+            </h1>
+            <span className="rubber-stamp rubber-stamp-red text-[10px] sm:text-[11px]">
+              [ IMMUTABLE LEDGER ]
             </span>
-          </h1>
-          <p className="text-[#4a3a25] mt-1 text-sm md:text-base leading-relaxed">
-            Clear worker visibility, transparent wage tracking, and trustworthy field oversight for the unorganized workforce.
+          </div>
+          <p className="font-serif italic text-xs sm:text-sm text-[#4e3314] mt-2 leading-relaxed max-w-3xl">
+            Official Pre-Internet Physical Command Register: Digital wage theft prevention ledger for unorganized laborers via WhatsApp telegraphic satellite GPS tokens.
           </p>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        {/* Action Controls */}
+        <div className="flex items-center gap-2.5 flex-wrap shrink-0">
           <button
             onClick={onRefresh}
-            title="Reload ledger records"
-            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs md:text-sm font-medium rounded border border-[#8b6f47] bg-[#efe4c8] hover:bg-[#e7ddc4] text-[#3b2f1e] shadow-sm transition"
+            className="inline-flex items-center gap-1.5 px-3 py-2 text-xs font-typewriter font-bold rounded bg-[#ebdcb9] hover:bg-[#dfcaa0] border-2 border-[#aa8c58] text-[#221910] shadow-sm transition active:translate-y-0.5"
+            title="Re-read physical ledger cards"
           >
-            <RefreshCw className="w-3.5 h-3.5 text-[#7a5a2e]" />
-            Sync Ledger
+            <RefreshCw className="w-3.5 h-3.5 text-[#6f4e24] shrink-0" />
+            SYNC REGISTER
           </button>
 
           <button
             onClick={onOpenSimulator}
-            className="inline-flex items-center gap-2 px-4 py-2 text-xs md:text-sm font-semibold rounded border border-[#5a3e1b] bg-[#7a5a2e] hover:bg-[#5a3e1b] text-[#f4ecd8] shadow-md transition"
+            className="inline-flex items-center gap-2 px-4 py-2 text-xs font-typewriter font-bold rounded bg-[#6f4e24] hover:bg-[#4e3314] border-2 border-[#382819] text-[#fbf6ea] shadow-md transition active:translate-y-0.5"
           >
-            <Receipt className="w-4 h-4" />
-            WhatsApp Test Bot
+            <Radio className="w-4 h-4 text-[#ecc2ba] shrink-0" />
+            WHATSAPP TELEX CONSOLE
           </button>
         </div>
       </div>
 
-      <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-[#6b5330]">
-        <span className="flex items-center gap-1">
-          <span className="w-2 h-2 rounded-full bg-emerald-700 animate-pulse"></span>
-          Twilio WhatsApp Node: <strong className="text-[#3b2f1e] font-serif">+1 (415) 523-8886</strong>
-        </span>
-        <span className="hidden sm:inline text-[#b59b72]">•</span>
-        <span className="flex items-center gap-1">
-          <MapPin className="w-3 h-3 text-[#7a5a2e]" />
-          GPS Attendance Rate: <strong className="text-[#3b2f1e] font-serif">₹600.00 / day</strong>
-        </span>
-        <span className="hidden sm:inline text-[#b59b72]">•</span>
-        <span>
-          Tamper-Evident Standard: <strong className="text-[#3b2f1e]">Immutable Receipts</strong>
-        </span>
+      {/* Decorative Ticker Tape / Registry Ribbon */}
+      <div className="mt-4 p-2.5 bg-[#ebdcb9] border-y-2 border-[#aa8c58] text-[11px] font-typewriter text-[#382819] flex flex-wrap items-center justify-between gap-2.5 shadow-inner leading-normal">
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="w-2 h-2 rounded-full bg-[#9e2a2b] shrink-0 animate-ping"></span>
+          <span>TELEGRAPH WIRE: <strong className="whitespace-nowrap">+1 (415) 523-8886</strong> (TWILIO SANDBOX)</span>
+        </div>
+        <div className="flex flex-wrap items-center gap-2">
+          <span>CODE: <strong className="bg-[#fbf6ea] px-1 py-0.5 border border-[#aa8c58] whitespace-nowrap">join smart-river</strong></span>
+          <span className="hidden sm:inline text-[#aa8c58]">•</span>
+          <span>STATUTORY WAGE: <strong className="text-[#9e2a2b] whitespace-nowrap">₹600.00 / DAY</strong></span>
+          <span className="hidden sm:inline text-[#aa8c58]">•</span>
+          <span>EVIDENCE: <strong className="whitespace-nowrap">UNALTERABLE GPS TOKEN</strong></span>
+        </div>
       </div>
     </header>
   );

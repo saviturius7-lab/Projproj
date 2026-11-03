@@ -1,5 +1,6 @@
 import { WorkLog } from '../types';
 import { INITIAL_WORK_LOGS } from '../data/initialLogs';
+import { runPreAiBot } from './preAiBot';
 
 const STORAGE_KEY = 'shramik_sakshi_work_logs_v1';
 
@@ -59,8 +60,7 @@ export function generateVerificationToken(phone: string): string {
 }
 
 /**
- * Replicates the exact Python Twilio webhook logic from main.py:
- * Handles incoming location pins or text commands ('hisaab' / 'summary' / 'हिसाब').
+ * Replaces any AI/LLM with the deterministic Pre-AI Rule-Based Expert System
  */
 export function processIncomingWhatsAppMessage(
   from: string,
@@ -69,65 +69,39 @@ export function processIncomingWhatsAppMessage(
   longitude?: number | null,
   locationName?: string
 ): { reply: string; newLog?: WorkLog } {
-  const phone = from.trim();
   const currentLogs = getStoredLogs();
 
-  if (latitude !== undefined && latitude !== null && longitude !== undefined && longitude !== null) {
-    const timestampStr = formatISTDateTime();
-    const token = generateVerificationToken(phone);
-    const newLog: WorkLog = {
+  // Run the deterministic Pre-AI Finite State Automaton
+  const result = runPreAiBot(from, body, latitude, longitude, locationName, currentLogs);
+
+  let newLog: WorkLog | undefined = undefined;
+
+  if (result.logData) {
+    const cleanPhone = from.replace(/^whatsapp:/, '').trim() || '+919876543210';
+    const cleanLast4 = cleanPhone.replace(/\D/g, '').slice(-4);
+    const token = result.logData.status === 'disputed'
+      ? `DISP-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`
+      : `SS-WA-${new Date().getFullYear()}-${cleanLast4}-${Math.random().toString(16).substring(2, 6).toUpperCase()}`;
+
+    newLog = {
       id: `rec_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 6)}`,
-      phone_number: phone,
-      latitude: Number(latitude),
-      longitude: Number(longitude),
+      phone_number: cleanPhone,
+      latitude: result.logData.latitude,
+      longitude: result.logData.longitude,
       message_type: 'location',
-      raw_message: body || (locationName ? `Location Pin: ${locationName}` : 'Location Pin'),
-      estimated_wage: 600.0,
+      raw_message: result.logData.rawMessage,
+      estimated_wage: result.logData.estimatedWage || 600.0,
       created_at: new Date().toISOString(),
-      location_name: locationName || `Site (${latitude.toFixed(4)}, ${longitude.toFixed(4)})`,
-      status: 'verified',
+      location_name: result.logData.locationName || `Site (${result.logData.latitude.toFixed(4)}, ${result.logData.longitude.toFixed(4)})`,
+      status: result.logData.status || 'verified',
       verification_token: token,
     };
 
-    const updatedLogs = [newLog, ...currentLogs];
-    saveStoredLogs(updatedLogs);
-
-    const reply = 
-      "🛠️ *श्रमिक साक्षी (Shramik Sakshi) - उपस्थिति रसीद* 🛠️\n\n" +
-      `👤 *मोबाईल:* ${phone}\n` +
-      `📅 *दिनांक:* ${timestampStr}\n` +
-      `📍 *लोकेशन:* दर्ज (GPS Verified: ${latitude.toFixed(4)}, ${longitude.toFixed(4)})\n` +
-      `💰 *आज की तय दिहाड़ी:* ₹600.00\n` +
-      `🔐 *रसीद टोकन:* ${token}\n\n` +
-      "✅ *आपकी हाजिरी सुरक्षित कर ली गई है।* यह डिजिटल रिकॉर्ड बदला नहीं जा सकता। ठगी से बचने के लिए इसे संभाल कर रखें।";
-
-    return { reply, newLog };
+    const updated = [newLog, ...currentLogs];
+    saveStoredLogs(updated);
   }
 
-  const cleanBody = body.trim().toLowerCase();
-  if (['hisaab', 'summary', 'हिसाब', 'hisab'].includes(cleanBody)) {
-    const workerLogs = currentLogs.filter(log => log.phone_number === phone);
-    const totalDays = workerLogs.length;
-    const totalEarnings = totalDays * 600;
-
-    const reply = 
-      "📊 *श्रमिक साक्षी - आपका आधिकारिक खाता* 📊\n\n" +
-      `👤 *मोबाईल:* ${phone}\n` +
-      `📈 *कुल कार्य दिवस (Total Days):* ${totalDays} दिन\n` +
-      `💵 *कुल निश्चित कमाई (Total Earnings):* ₹${totalEarnings.toLocaleString('en-IN')}\n` +
-      "⚖️ *सुरक्षित स्थिति:* कोई विसंगति नहीं (No Discrepancies)\n\n" +
-      "💡 *Tip:* ठेकेदार द्वारा पैसे काटने पर तुरंत इस रसीद को अपनी स्थानीय लेबर यूनियन या NGO को दिखाएं।";
-
-    return { reply };
-  }
-
-  // Fallback greeting identical to main.py
-  const reply = 
-    "श्रमिक साक्षी में आपका स्वागत है।\n\n" +
-    "• उपस्थिति दर्ज करने के लिए अपना *Location (स्थान)* भेजें।\n" +
-    "• अपना कुल बकाया देखने के लिए *Hisaab* लिखकर भेजें।";
-
-  return { reply };
+  return { reply: result.reply, newLog };
 }
 
 export function generateAuditText(workerPhone: string, logs: WorkLog[]): string {
@@ -136,7 +110,7 @@ export function generateAuditText(workerPhone: string, logs: WorkLog[]): string 
   
   let content = "====================================================\n";
   content += "   SHRAMIK SAKSHI - WORK HISTORY & WAGE AUDIT\n";
-  content += "      Official NGO Ledger Proof of Attendance\n";
+  content += "      Official Pre-Internet Ledger Proof of Attendance\n";
   content += "====================================================\n\n";
   content += `Worker Identifier (Mobile): ${workerPhone}\n`;
   content += `Audit Timestamp: ${formatISTDateTime()}\n`;
