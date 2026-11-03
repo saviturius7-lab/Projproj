@@ -1,0 +1,7 @@
+fastapi
+uvicorn
+supabase
+twilio
+python-multipart
+streamlit
+pandas
