@@ -1,0 +1,58 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg-parchment: #f4ecd8;
+  --card-parchment: #efe4c8;
+  --border-accent: #8b6f47;
+  --text-primary: #3b2f1e;
+  --text-dark: #2a1f12;
+}
+
+body {
+  margin: 0;
+  background-color: #f4ecd8;
+  background-image: radial-gradient(ellipse at top, #f7f0de 0%, #e8ddc0 100%);
+  color: #3b2f1e;
+  font-family: 'Lora', Georgia, serif;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, .font-heading {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+/* Leaflet map vintage parchment styles */
+.leaflet-container {
+  font-family: 'Lora', Georgia, serif !important;
+  background: #ede3ca !important;
+}
+
+.leaflet-popup-content-wrapper {
+  background: #f7f0de !important;
+  color: #3b2f1e !important;
+  border: 1px solid #8b6f47 !important;
+  border-radius: 4px !important;
+  box-shadow: 0 4px 12px rgba(90, 62, 27, 0.2) !important;
+}
+
+.leaflet-popup-tip {
+  background: #f7f0de !important;
+}
+
+/* Custom scrollbars matching vintage aesthetic */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #ede3ca;
+}
+::-webkit-scrollbar-thumb {
+  background: #b59b72;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8b6f47;
+}
