@@ -3,10 +3,11 @@ import cors from 'cors';
 import path from 'path';
 import fs from 'fs';
 import { createServer as createViteServer } from 'vite';
-import { runPreAiBot } from './src/services/preAiBot';
+import { runPreAiBot } from './src/services/preAiBot.ts';
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
+const DEV_PORT = 3000;
 const HOST = '0.0.0.0';
 
 app.use(cors());
@@ -167,7 +168,7 @@ const handleTwilioWebhook = (req: express.Request, res: express.Response) => {
     const cleanLast4 = cleanPhone.replace(/\D/g, '').slice(-4);
     const token = botResult.logData.status === 'disputed'
       ? `DISP-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`
-      : `SS-WA-${new Date().getFullYear()}-${cleanLast4}-${Math.random().toString(16).substring(2, 6).toUpperCase()}`;
+      : `SS-TEL-${new Date().getFullYear()}-${cleanLast4}-${Math.random().toString(16).substring(2, 6).toUpperCase()}`;
 
     const newLog: ServerWorkLog = {
       id: `rec_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
@@ -185,7 +186,7 @@ const handleTwilioWebhook = (req: express.Request, res: express.Response) => {
 
     workLogsStore = [newLog, ...workLogsStore];
     persistLogs(workLogsStore);
-    console.log(`[Twilio Webhook] Persisted new entry to ledger: ${newLog.id} (status: ${newLog.status})`);
+    console.log(`[Telegraph Dispatch] Persisted new entry to ledger: ${newLog.id} (status: ${newLog.status})`);
   }
 
   res.header('Content-Type', 'application/xml');
@@ -194,6 +195,45 @@ const handleTwilioWebhook = (req: express.Request, res: express.Response) => {
 
 app.post('/api/webhook', handleTwilioWebhook);
 app.post('/webhook', handleTwilioWebhook);
+
+// Direct In-App Telegraph Dispatch Endpoint
+app.post('/api/dispatch', (req, res) => {
+  const phone = (req.body.phone || req.body.From || '+919876543210').toString().trim();
+  const body = (req.body.body || req.body.Body || '').toString().trim();
+  const lat = req.body.latitude !== undefined && req.body.latitude !== null ? parseFloat(req.body.latitude) : null;
+  const lng = req.body.longitude !== undefined && req.body.longitude !== null ? parseFloat(req.body.longitude) : null;
+  const siteName = req.body.locationName || req.body.siteName;
+
+  const botResult = runPreAiBot(phone, body, lat, lng, siteName, workLogsStore);
+  let createdLog: ServerWorkLog | null = null;
+
+  if (botResult.logData) {
+    const cleanPhone = phone.replace(/^whatsapp:/, '').trim() || '+919876543210';
+    const cleanLast4 = cleanPhone.replace(/\D/g, '').slice(-4);
+    const token = botResult.logData.status === 'disputed'
+      ? `DISP-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`
+      : `SS-TEL-${new Date().getFullYear()}-${cleanLast4}-${Math.random().toString(16).substring(2, 6).toUpperCase()}`;
+
+    createdLog = {
+      id: `rec_${Date.now()}_${Math.random().toString(36).substring(2, 6)}`,
+      phone_number: cleanPhone,
+      latitude: botResult.logData.latitude,
+      longitude: botResult.logData.longitude,
+      message_type: 'location',
+      raw_message: botResult.logData.rawMessage,
+      estimated_wage: botResult.logData.estimatedWage || 600.0,
+      created_at: new Date().toISOString(),
+      location_name: botResult.logData.locationName || siteName || 'GPS Verified Work Site',
+      status: botResult.logData.status || 'verified',
+      verification_token: token,
+    };
+
+    workLogsStore = [createdLog, ...workLogsStore];
+    persistLogs(workLogsStore);
+  }
+
+  res.json({ success: true, reply: botResult.reply, newLog: createdLog, action: botResult.actionTaken });
+});
 
 // REST API for frontend
 app.get('/api/logs', (req, res) => {
@@ -227,24 +267,50 @@ app.get('/api/status', (req, res) => {
 });
 
 async function startServer() {
-  if (process.env.NODE_ENV !== 'production') {
+  const distPath = path.resolve('dist');
+  const isProduction = process.env.NODE_ENV === 'production' || process.env.npm_lifecycle_event === 'start';
+
+  if (!isProduction && fs.existsSync(distPath) && !process.env.VITE_DEV) {
+    app.use(express.static(distPath));
+    app.get('{*path}', (req, res, next) => {
+      if (req.path.startsWith('/api') || req.path === '/webhook') return next();
+      res.sendFile(path.join(distPath, 'index.html'));
+    });
+  } else if (!isProduction) {
     const vite = await createViteServer({
       server: { middlewareMode: true },
       appType: 'spa',
     });
     app.use(vite.middlewares);
   } else {
-    const distPath = path.resolve('dist');
     app.use(express.static(distPath));
-    app.get('*', (req, res) => {
+    app.get('{*path}', (req, res, next) => {
+      if (req.path.startsWith('/api') || req.path === '/webhook') return next();
       res.sendFile(path.join(distPath, 'index.html'));
     });
   }
 
+  // Bind primary port required by Cloud Run (PORT env var, e.g. 8080)
   app.listen(PORT, HOST, () => {
-    console.log(`[Shramik Sakshi Pre-AI Engine] Listening on http://${HOST}:${PORT}`);
+    console.log(`[Shramik Sakshi] Primary Server listening on http://${HOST}:${PORT}`);
     console.log(`[Twilio Webhook Endpoint] Ready at http://${HOST}:${PORT}/api/webhook and /webhook`);
   });
+
+  // Also bind dev port 3000 if PORT is 8080 (for local dev reverse proxy)
+  if (PORT !== DEV_PORT) {
+    try {
+      const devServer = app.listen(DEV_PORT, HOST, () => {
+        console.log(`[Shramik Sakshi] Dev port also bound on http://${HOST}:${DEV_PORT}`);
+      });
+      devServer.on('error', (err: any) => {
+        if (err.code !== 'EADDRINUSE') {
+          console.warn(`[Shramik Sakshi] Dev port ${DEV_PORT} warning:`, err.message);
+        }
+      });
+    } catch (e) {
+      // Ignored
+    }
+  }
 }
 
 startServer();

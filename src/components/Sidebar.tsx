@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Compass, MessageSquare, ExternalLink, Radio, MapPin, RotateCcw, Paperclip } from 'lucide-react';
+import { Users, Radio, MapPin, RotateCcw, Search, CheckCircle } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface SidebarProps {
   workers: string[];
@@ -18,112 +19,86 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onQuickCheckIn,
   onResetData,
 }) => {
+  const { t } = useLanguage();
   const [directPhone, setDirectPhone] = useState('');
 
-  const launchDirectChat = (e: React.FormEvent) => {
+  const handleDirectLookup = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!directPhone) return;
-    const clean = directPhone.replace(/\D/g, '');
-    window.open(`https://wa.me/${clean}?text=Shramik%20Sakshi%20Labor%20Protection%20Record`, '_blank');
+    if (!directPhone.trim()) return;
+    onSelectWorker(directPhone.trim());
   };
 
   return (
-    <aside className="w-full lg:w-72 shrink-0 manila-folder border-2 border-[#aa8c58] rounded-md p-4 shadow-md relative">
-      {/* Decorative brass paperclip */}
-      <div className="absolute -top-3 left-6 text-[#aa8c58] pointer-events-none">
-        <Paperclip className="w-6 h-6 transform -rotate-45" />
-      </div>
-
-      <div className="border-b-2 border-[#aa8c58] pb-2 mb-4 pt-1">
-        <span className="text-[10px] font-typewriter font-bold uppercase text-[#6f4e24] block leading-tight">
-          DOSSIER SECTION 4-A
-        </span>
-        <h2 className="font-typewriter text-base font-bold text-[#221910] uppercase tracking-wide flex items-center gap-2 mt-0.5">
-          <Compass className="w-4 h-4 text-[#6f4e24] shrink-0" />
-          Command Controls
+    <aside className="w-full lg:w-72 shrink-0 retro-card rounded-xl p-4 sm:p-5 space-y-4">
+      {/* Sidebar Header */}
+      <div className="border-b border-[#1b485d] pb-2.5">
+        <h2 className="text-sm font-extrabold text-[#edf8f5] uppercase tracking-wider flex items-center gap-2">
+          <Users className="w-4 h-4 text-[#22d3ee] shrink-0" />
+          <span>{t.dossierSection}</span>
         </h2>
+        <p className="text-xs text-[#8abcb0] mt-0.5 font-medium">
+          Select a worker to see their days and slips
+        </p>
       </div>
 
       {/* Select Worker Filter */}
-      <div className="mb-5 bg-[#fbf6ea] border-2 border-[#aa8c58] rounded p-2.5 shadow-inner">
-        <label className="block text-[11px] font-typewriter font-bold uppercase text-[#6f4e24] mb-1.5 flex flex-wrap items-center justify-between gap-1 leading-tight">
-          <span>Worker Dossier Select:</span>
-          <span className="text-[10px] text-[#9e2a2b] font-mono shrink-0">
-            {workers.length} ENROLLED
+      <div className="retro-inset rounded-lg p-3">
+        <label className="block text-xs font-bold text-[#edf8f5] mb-2 flex items-center justify-between">
+          <span>{t.workerDossierSelect}</span>
+          <span className="text-[11px] bg-[#07241b] text-[#34d399] px-2 py-0.5 rounded font-bold border border-[#165640]">
+            {workers.length} {t.enrolledCount}
           </span>
         </label>
         <select
           value={selectedWorker}
           onChange={(e) => onSelectWorker(e.target.value)}
-          className="w-full px-2 py-1.5 bg-[#ebdcb9] border border-[#aa8c58] rounded text-xs font-mono font-bold text-[#221910] focus:outline-none focus:ring-1 focus:ring-[#6f4e24]"
+          className="w-full px-2.5 py-2 bg-[#091e2b] border border-[#1d4d62] rounded-md text-xs sm:text-sm font-mono font-bold text-[#edf8f5] focus:outline-none focus:ring-2 focus:ring-[#22d3ee] cursor-pointer transition-all duration-200"
         >
-          <option value="All Workers">All Laborers (Master Roll)</option>
+          <option value="All Workers" className="bg-[#091e2b] text-[#edf8f5]">{t.allLaborersOption}</option>
           {workers.map((phone) => (
-            <option key={phone} value={phone}>
-              Dossier: {phone}
+            <option key={phone} value={phone} className="bg-[#091e2b] text-[#edf8f5]">
+              {phone}
             </option>
           ))}
         </select>
       </div>
 
-      {/* Primary Action Buttons */}
-      <div className="space-y-2 mb-5">
+      {/* Primary Action Buttons with Tactile 3D Feel */}
+      <div className="space-y-2.5">
         <button
-          onClick={onOpenSimulator}
-          className="w-full inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded bg-[#6f4e24] hover:bg-[#4e3314] text-[#fbf6ea] font-typewriter font-bold text-xs transition border-2 border-[#382819] shadow-sm active:translate-y-0.5"
+          onClick={onQuickCheckIn}
+          className="retro-btn-emerald w-full inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-lg font-black text-xs sm:text-sm cursor-pointer active:scale-95 shadow-md"
         >
-          <Radio className="w-4 h-4 text-[#ecc2ba] shrink-0" />
-          <span>WHATSAPP TELEX CONSOLE</span>
+          <MapPin className="w-4 h-4 text-[#7ff0cb] shrink-0" />
+          <span>{t.dispatchGpsPinBtn}</span>
         </button>
 
         <button
-          onClick={onQuickCheckIn}
-          className="w-full inline-flex items-center justify-center gap-2 px-3 py-2 rounded bg-[#ebdcb9] hover:bg-[#dfcaa0] text-[#221910] font-typewriter font-bold text-xs transition border-2 border-[#aa8c58] active:translate-y-0.5"
+          onClick={onOpenSimulator}
+          className="retro-btn-muted w-full inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-lg font-extrabold text-xs sm:text-sm cursor-pointer active:scale-95"
         >
-          <MapPin className="w-3.5 h-3.5 text-[#9e2a2b] shrink-0" />
-          <span>DISPATCH GPS ATTENDANCE PIN</span>
+          <Radio className="w-4 h-4 text-[#22d3ee] shrink-0" />
+          <span>{t.telexConsoleBtn}</span>
         </button>
       </div>
 
-      {/* Instructions Card: Carbon slip style */}
-      <div className="carbon-copy-pink border-2 border-[#ecc2ba] rounded p-3 mb-4 text-xs font-serif text-[#382819] shadow-inner relative">
-        <div className="flex flex-wrap items-center justify-between gap-1 mb-2">
-          <span className="font-typewriter font-bold text-[#9e2a2b] text-[11px] uppercase shrink-0">
-            REGULATION INSTRUCTIONS:
-          </span>
-          <span className="rubber-stamp rubber-stamp-red text-[8px]">
-            URGENT
-          </span>
+      {/* Simple How-it-Works Box */}
+      <div className="bg-[#06241b] border border-[#15664a] rounded-lg p-3 text-xs text-[#edf8f5]">
+        <div className="font-extrabold text-[#34d399] text-xs uppercase mb-1.5 flex items-center justify-between tracking-wide">
+          <span>{t.regulationInstructions}</span>
+          <CheckCircle className="w-3.5 h-3.5 text-[#34d399]" />
         </div>
-        <ol className="list-decimal list-inside space-y-1.5 text-[11px] leading-relaxed">
-          <li>
-            Open WhatsApp on personal device or web.
-          </li>
-          <li>
-            Send code: <strong className="font-typewriter text-[#9e2a2b] bg-[#fbf6ea] px-1 py-0.5 border border-[#ecc2ba] whitespace-nowrap">join smart-river</strong>
-          </li>
-          <li>
-            Broadcast <strong className="text-[#221910]">Location Pin</strong> to log attendance or text <strong className="font-typewriter whitespace-nowrap">Hisaab</strong>.
-          </li>
+        <ol className="list-decimal list-inside space-y-1 text-xs text-[#9fc7bd] leading-relaxed font-medium">
+          <li>{t.instStep1}</li>
+          <li>{t.instStep2}</li>
+          <li>{t.instStep3}</li>
         </ol>
       </div>
 
-      {/* External WhatsApp button */}
-      <a
-        href="https://wa.me/14155238886?text=join%20smart-river"
-        target="_blank"
-        rel="noopener noreferrer"
-        className="w-full inline-flex items-center justify-center gap-2 px-3 py-2.5 rounded bg-[#2d6a4f] hover:bg-[#1b4332] text-[#fbf6ea] font-typewriter font-bold text-xs transition border-2 border-[#1b4332] shadow-sm leading-tight"
-      >
-        <MessageSquare className="w-4 h-4 shrink-0" />
-        <span>CONNECT LIVE WHATSAPP</span>
-        <ExternalLink className="w-3 h-3 ml-0.5 opacity-80 shrink-0" />
-      </a>
-
-      {/* Direct phone WhatsApp lookup */}
-      <form onSubmit={launchDirectChat} className="mt-4 pt-3 border-t border-[#aa8c58]/60">
-        <label className="block text-[10px] font-typewriter font-bold text-[#6f4e24] mb-1.5 uppercase leading-tight">
-          Direct Worker WhatsApp Link:
+      {/* Direct Search by Phone */}
+      <form onSubmit={handleDirectLookup} className="pt-2 border-t border-[#1b485d]">
+        <label className="block text-xs font-bold text-[#22d3ee] mb-1.5">
+          {t.directWorkerChatLabel}
         </label>
         <div className="flex gap-1.5">
           <input
@@ -131,25 +106,26 @@ export const Sidebar: React.FC<SidebarProps> = ({
             placeholder="+91..."
             value={directPhone}
             onChange={(e) => setDirectPhone(e.target.value)}
-            className="flex-1 min-w-0 px-2 py-1 bg-[#fbf6ea] border border-[#aa8c58] rounded text-xs font-mono font-bold text-[#221910] focus:outline-none"
+            className="flex-1 min-w-0 px-2.5 py-1.5 bg-[#081b27] border border-[#1c4b60] rounded-md text-xs sm:text-sm font-mono font-bold text-[#edf8f5] placeholder-[#679187] focus:outline-none focus:ring-1 focus:ring-[#22d3ee]"
           />
           <button
             type="submit"
-            className="px-2.5 py-1 bg-[#aa8c58] hover:bg-[#8b6f47] text-[#fbf6ea] text-xs font-typewriter font-bold rounded shrink-0"
+            className="retro-btn-petrol px-3 py-1.5 text-xs font-bold rounded-md shrink-0 flex items-center gap-1 cursor-pointer active:scale-95"
           >
-            Chat
+            <Search className="w-3 h-3" />
+            <span>{t.chatBtn}</span>
           </button>
         </div>
       </form>
 
-      {/* Reset ledger button */}
-      <div className="mt-4 pt-2 border-t border-[#aa8c58]/60">
+      {/* Reset Records */}
+      <div className="pt-2 border-t border-[#1b485d]">
         <button
           onClick={onResetData}
-          className="w-full inline-flex items-center justify-center gap-1.5 py-1.5 text-[10px] font-typewriter font-bold text-[#684f33] hover:text-[#9e2a2b] transition leading-tight text-center"
+          className="w-full inline-flex items-center justify-center gap-1.5 py-1.5 text-xs text-[#70a194] hover:text-[#22d3ee] font-bold transition-colors cursor-pointer"
         >
-          <RotateCcw className="w-3 h-3 shrink-0" />
-          <span>RESET TO ARCHIVED SEED DOSSIERS</span>
+          <RotateCcw className="w-3.5 h-3.5 shrink-0" />
+          <span>{t.resetArchivedBtn}</span>
         </button>
       </div>
     </aside>

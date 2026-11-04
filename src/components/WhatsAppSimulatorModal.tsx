@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { WorkLog, ChatMessage } from '../types';
 import { processIncomingWhatsAppMessage, formatISTDateTime } from '../services/storage';
 import { X, Send, MapPin, Radio } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 interface WhatsAppSimulatorModalProps {
   isOpen: boolean;
@@ -11,11 +12,12 @@ interface WhatsAppSimulatorModalProps {
 }
 
 const PRESET_SITES = [
+  { name: 'Peenya Industrial Line 12, Bengaluru (Bengaluru/ಕನ್ನಡ)', lat: 13.0312, lng: 77.5165 },
+  { name: 'Sanathnagar Industrial Hub, Hyderabad (Hyderabad/తెలుగు)', lat: 17.4578, lng: 78.4412 },
+  { name: 'Guindy Estate Sector 4, Chennai (Chennai/தமிழ்)', lat: 13.0067, lng: 80.2025 },
+  { name: 'Willingdon Island Cargo Dock, Kochi (Kochi/മലയാളം)', lat: 9.9482, lng: 76.2731 },
   { name: 'Azadpur Mandi Yard Gate 3, Delhi', lat: 28.7172, lng: 77.1678 },
   { name: 'Dharavi Transit Camp Site 4, Mumbai', lat: 19.0428, lng: 72.8521 },
-  { name: 'Peenya Industrial Line 12, Bengaluru', lat: 13.0312, lng: 77.5165 },
-  { name: 'Shaheed Path Flyover Pier 14, Lucknow', lat: 26.8485, lng: 80.9491 },
-  { name: 'Okhla Phase 3 Construction Yard, Delhi', lat: 28.5367, lng: 77.2745 },
 ];
 
 export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
@@ -24,6 +26,7 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
   onLogCreated,
   currentPhoneNumber,
 }) => {
+  const { t } = useLanguage();
   const [phoneNumber, setPhoneNumber] = useState(currentPhoneNumber || '+919876543210');
   const [inputText, setInputText] = useState('');
   const [selectedSiteIndex, setSelectedSiteIndex] = useState(0);
@@ -34,15 +37,15 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
       id: 'init_1',
       sender: 'bot',
       text: 
-        "🛠️ *श्रमिक साक्षी (Shramik Sakshi) - स्वचालित लेबर डेस्क* 🛠️\n" +
+        "🛠️ *श्रमिक साक्षी (Shramik Sakshi) - Automated Labor Telex* 🛠️\n" +
         "------------------------------------------\n" +
-        "असंगठित क्षेत्र के कामगारों के लिए प्री-एआई डिजिटल वेतन सुरक्षा प्रणाली।\n\n" +
-        "1️⃣ *हाजिरी दर्ज करें:* Location Pin भेजें।\n" +
-        "2️⃣ *हिसाब देखें:* '2' या *'Hisaab'* लिखकर कुल कमाई देखें।\n" +
-        "3️⃣ *ठेकेदार शिकायत:* '3' या *'Shikayat'* लिखकर वेतन चोरी दर्ज करें।\n" +
-        "4️⃣ *मजदूरी दर व नियम:* '4' या *'Rate'* लिखकर नियम जानें।\n" +
-        "5️⃣ *हेल्पलाइन नंबर:* '5' या *'Help'* लिखकर मुफ्त कानूनी मदद पाएं।\n" +
-        "6️⃣ *बिना GPS हाजिरी:* '6' या *'Site'* लिखकर साइट कोड दर्ज करें।",
+        "Pre-AI Digital Wage Protection & Muster Roll System.\n\n" +
+        "1️⃣ *Log Attendance:* Send GPS Location Pin (ಸ್ಥಳ / లొకేషన్ / இடம் / സ്ഥലം).\n" +
+        "2️⃣ *Ledger Balance:* '2' or *'Hisaab'* (ಲೆಕ್ಕ / లెక్క / கணக்கு / കണക്ക്).\n" +
+        "3️⃣ *Dispute Filing:* '3' or *'Shikayat'* (ದೂರು / ఫిర్యాదు / புகார் / പരാതി).\n" +
+        "4️⃣ *Statutory Rate:* '4' or *'Rate'* (ದರ / రేటు / கூலி / നിരക്ക്).\n" +
+        "5️⃣ *Helpline:* '5' or *'Help'* (ಸಹಾಯ / సహాయం / உதவி / സഹായം).\n" +
+        "6️⃣ *Manual Site Code:* '6' or *'Site'* (ಉದಾ: Site Peenya).",
       timestamp: formatISTDateTime(),
     },
   ]);
@@ -88,18 +91,18 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
         onLogCreated(newLog);
       }
 
-      // Forward to backend express webhook route
+      // Forward to backend express dispatch route
       try {
-        const params = new URLSearchParams();
-        params.append('From', `whatsapp:${phoneNumber}`);
-        params.append('Body', body || 'Location Pin');
-        if (lat) params.append('Latitude', lat.toString());
-        if (lng) params.append('Longitude', lng.toString());
-
-        await fetch('/api/webhook', {
+        await fetch('/api/dispatch', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          body: params.toString(),
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            phone: phoneNumber,
+            body: body || 'Location Pin',
+            latitude: lat,
+            longitude: lng,
+            locationName,
+          }),
         });
       } catch (e) {
         // Ignored
@@ -145,52 +148,52 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/80 backdrop-blur-xs font-typewriter">
-      <div className="bg-[#2a241b] border-4 border-[#aa8c58] rounded-md max-w-lg w-full overflow-hidden shadow-2xl flex flex-col h-[670px] max-h-[92vh]">
-        {/* Telex Terminal Header - Zero Collision */}
-        <div className="bg-[#1a140d] border-b-2 border-[#aa8c58] p-3 text-[#fbf6ea] flex items-center justify-between gap-2">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-sm animate-in fade-in duration-200">
+      <div className="retro-card rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl flex flex-col h-[680px] max-h-[92vh]">
+        {/* Telex Terminal Header */}
+        <div className="bg-[#061824] border-b border-[#1b4b60] p-3 text-[#edf8f5] flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5 min-w-0">
-            <Radio className="w-5 h-5 text-[#9e2a2b] shrink-0 animate-pulse" />
+            <Radio className="w-5 h-5 text-[#22d3ee] shrink-0 animate-pulse" />
             <div className="min-w-0">
-              <div className="text-xs font-bold uppercase tracking-wide flex flex-wrap items-center gap-1.5 leading-tight">
-                <span>PRE-AI TRANSCEIVER T-74</span>
-                <span className="rubber-stamp rubber-stamp-red text-[8px] py-0 px-1">
-                  DETERMINISTIC
+              <div className="text-xs font-black uppercase tracking-wide flex flex-wrap items-center gap-1.5 leading-tight">
+                <span>{t.telexTerminalTitle}</span>
+                <span className="retro-stamp-cyan text-[8px] py-0 px-1.5">
+                  {t.deterministicStamp}
                 </span>
               </div>
-              <div className="text-[10px] text-[#aa8c58] truncate mt-0.5">
-                SANDBOX: +1 (415) 523-8886 • RULE ENGINE
+              <div className="text-[10px] text-[#34d399] font-mono truncate mt-0.5">
+                FIELD STATION: WIRE LINE 1974-IND • DFSA SYNTAX ENGINE
               </div>
             </div>
           </div>
 
           <button
             onClick={onClose}
-            className="p-1 rounded hover:bg-[#382819] text-[#fbf6ea] transition shrink-0"
+            className="p-1 rounded-lg hover:bg-[#102e40] text-[#edf8f5] transition-colors cursor-pointer shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Worker Phone Dial Bar */}
-        <div className="bg-[#382819] border-b border-[#aa8c58] px-3 py-2 text-xs flex flex-wrap items-center gap-2 text-[#fbf6ea]">
-          <span className="text-[10px] uppercase font-bold text-[#aa8c58] whitespace-nowrap shrink-0">
-            MUSTER LINE ID:
+        <div className="bg-[#081f2f] border-b border-[#1b485d] px-3.5 py-2 text-xs flex flex-wrap items-center gap-2 text-[#edf8f5]">
+          <span className="text-[10px] uppercase font-bold text-[#89b8aa] whitespace-nowrap shrink-0">
+            {t.musterLineId}:
           </span>
           <input
             type="text"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            className="flex-1 min-w-[140px] px-2 py-0.5 rounded bg-[#1a140d] border border-[#aa8c58] text-xs font-mono font-bold text-[#9e2a2b] focus:outline-none"
+            className="flex-1 min-w-[140px] px-2.5 py-1 rounded bg-[#05141e] border border-[#1d4d62] text-xs font-mono font-bold text-[#22d3ee] focus:outline-none focus:ring-1 focus:ring-[#22d3ee]"
             placeholder="+91..."
           />
         </div>
 
         {/* Teletype Paper Roll */}
-        <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 bg-[#fbf5e8] text-[#221910] font-typewriter shadow-inner">
-          <div className="text-center my-1 border-b border-dashed border-[#aa8c58] pb-1">
-            <span className="text-[9px] uppercase tracking-widest text-[#684f33] font-bold">
-              --- TELEGRAPH TRANSCRIPT • DETERMINISTIC DECISION RULES ---
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 retro-inset text-[#edf8f5] font-mono text-xs scrollbar-thin">
+          <div className="text-center my-1 border-b border-dashed border-[#1b485d] pb-1">
+            <span className="text-[9px] uppercase tracking-widest text-[#70a194] font-bold">
+              --- {t.telegraphTranscriptHeader} ---
             </span>
           </div>
 
@@ -202,27 +205,27 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
               }`}
             >
               <div
-                className={`max-w-[90%] p-3 rounded text-xs leading-relaxed border-2 ${
+                className={`max-w-[90%] p-3.5 rounded-xl text-xs leading-relaxed border transition-all ${
                   m.sender === 'user'
-                    ? 'bg-[#fae4df] border-[#ecc2ba] text-[#221910]'
-                    : 'bg-[#fff] border-[#aa8c58] text-[#221910] shadow-xs'
+                    ? 'bg-[#0a2736] border-[#1d556e] text-[#edf8f5]'
+                    : 'bg-[#06261d] border-[#166348] text-[#edf8f5] shadow-md'
                 }`}
               >
-                <div className="text-[9px] font-bold uppercase mb-1.5 text-[#6f4e24] flex items-center justify-between border-b border-[#aa8c58]/30 pb-0.5 gap-2">
-                  <span className="truncate">{m.sender === 'user' ? 'TRANSMITTER (LABORER)' : 'SHRAMIK SAKSHI EXPERT ENGINE'}</span>
-                  <span className="shrink-0">{m.timestamp.slice(11, 19)}</span>
+                <div className="text-[9px] font-bold uppercase mb-1.5 text-[#8cbab0] flex items-center justify-between border-b border-white/10 pb-1 gap-2">
+                  <span className="truncate">{m.sender === 'user' ? t.transmitterWorker : t.expertEngine}</span>
+                  <span className="shrink-0 font-mono text-[#22d3ee]">{m.timestamp.slice(11, 19)}</span>
                 </div>
 
                 {m.isLocationPin && (
-                  <div className="mb-2 p-1.5 bg-[#e8edf5] border border-[#c2d0e5] rounded text-[10px] leading-snug">
-                    <strong className="block text-[#1d3557]">📍 SATELLITE GPS BROADCAST:</strong>
-                    <span className="font-mono text-[#221910]">
+                  <div className="mb-2 p-2 bg-[#051a24] border border-[#1b4b60] rounded-lg text-[10px] leading-snug">
+                    <strong className="block text-[#22d3ee]">📍 {t.satelliteGpsBroadcast}:</strong>
+                    <span className="font-mono text-[#34d399]">
                       {m.latitude?.toFixed(4)}, {m.longitude?.toFixed(4)}
                     </span>
                   </div>
                 )}
 
-                <div className="whitespace-pre-wrap font-typewriter leading-relaxed">
+                <div className="whitespace-pre-wrap leading-relaxed font-sans text-xs">
                   {m.text}
                 </div>
               </div>
@@ -231,50 +234,50 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
         </div>
 
         {/* Telex Quick Buttons */}
-        <div className="bg-[#1a140d] border-t-2 border-[#aa8c58] p-3 space-y-2">
+        <div className="bg-[#061824] border-t border-[#1b485d] p-3 space-y-2.5">
           {/* Quick Pre-AI Rule Triggers */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[10px]">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[10px] scrollbar-thin">
             <button
               onClick={() => sendMessage('MENU')}
-              className="px-2 py-1 rounded bg-[#382819] hover:bg-[#4e3314] border border-[#aa8c58] text-[#fbf6ea] whitespace-nowrap font-bold shrink-0"
+              className="retro-btn-muted px-2.5 py-1 rounded text-[#edf8f5] whitespace-nowrap font-bold shrink-0 cursor-pointer active:scale-95"
             >
-              [ 0. MENU ]
+              {t.macroMenu}
             </button>
             <button
               onClick={() => sendMessage('Hisaab')}
-              className="px-2 py-1 rounded bg-[#382819] hover:bg-[#4e3314] border border-[#aa8c58] text-[#fbf6ea] whitespace-nowrap font-bold shrink-0"
+              className="retro-btn-muted px-2.5 py-1 rounded text-[#38bdf8] whitespace-nowrap font-bold shrink-0 cursor-pointer active:scale-95"
             >
-              [ 2. 📊 HISAAB ]
+              {t.macroHisaab}
             </button>
             <button
               onClick={() => sendMessage('Shikayat')}
-              className="px-2 py-1 rounded bg-[#382819] hover:bg-[#4e3314] border border-[#aa8c58] text-[#fbf6ea] whitespace-nowrap font-bold text-[#e57373] shrink-0"
+              className="retro-btn-muted px-2.5 py-1 rounded text-[#22d3ee] whitespace-nowrap font-bold shrink-0 cursor-pointer active:scale-95"
             >
-              [ 3. 🚨 SHIKAYAT ]
+              {t.macroShikayat}
             </button>
             <button
               onClick={() => sendMessage('Rate')}
-              className="px-2 py-1 rounded bg-[#382819] hover:bg-[#4e3314] border border-[#aa8c58] text-[#fbf6ea] whitespace-nowrap font-bold shrink-0"
+              className="retro-btn-muted px-2.5 py-1 rounded text-[#34d399] whitespace-nowrap font-bold shrink-0 cursor-pointer active:scale-95"
             >
-              [ 4. 📜 RATE ]
+              {t.macroRate}
             </button>
             <button
               onClick={() => sendMessage('Help')}
-              className="px-2 py-1 rounded bg-[#382819] hover:bg-[#4e3314] border border-[#aa8c58] text-[#fbf6ea] whitespace-nowrap font-bold shrink-0"
+              className="retro-btn-muted px-2.5 py-1 rounded text-[#fbbf24] whitespace-nowrap font-bold shrink-0 cursor-pointer active:scale-95"
             >
-              [ 5. 📞 HELP ]
+              {t.macroHelp}
             </button>
           </div>
 
           {/* Location Pin Trigger Row */}
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-2">
             <select
               value={selectedSiteIndex}
               onChange={(e) => setSelectedSiteIndex(Number(e.target.value))}
-              className="flex-1 min-w-0 px-2 py-1 bg-[#2a241b] border border-[#aa8c58] rounded text-xs text-[#fbf6ea] truncate focus:outline-none font-typewriter"
+              className="flex-1 min-w-0 px-2.5 py-1.5 bg-[#081b27] border border-[#1d4d62] rounded-lg text-xs text-[#edf8f5] truncate focus:outline-none cursor-pointer"
             >
               {PRESET_SITES.map((site, idx) => (
-                <option key={site.name} value={idx}>
+                <option key={site.name} value={idx} className="bg-[#081b27] text-[#edf8f5]">
                   📍 {site.name}
                 </option>
               ))}
@@ -282,36 +285,36 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
 
             <button
               onClick={handleSendPresetLocation}
-              className="px-3 py-1 bg-[#9e2a2b] hover:bg-[#781f20] text-[#fbf6ea] rounded text-xs font-bold whitespace-nowrap border border-[#aa8c58] transition shrink-0"
+              className="retro-btn-emerald px-3.5 py-1.5 rounded-lg text-xs font-black whitespace-nowrap shrink-0 cursor-pointer active:scale-95"
             >
-              PIN
+              {t.broadcastPinBtn}
             </button>
 
             <button
               onClick={handleSendBrowserGPS}
               disabled={isLocating}
               title="Use current device GPS"
-              className="p-1.5 bg-[#382819] hover:bg-[#4e3314] border border-[#aa8c58] rounded text-[#fbf6ea] shrink-0"
+              className="retro-btn-muted p-1.5 rounded-lg text-[#22d3ee] shrink-0 cursor-pointer active:scale-95"
             >
-              <MapPin className={`w-3.5 h-3.5 ${isLocating ? 'animate-bounce text-[#9e2a2b]' : 'text-[#aa8c58]'}`} />
+              <MapPin className={`w-4 h-4 ${isLocating ? 'animate-bounce text-[#22d3ee]' : 'text-[#22d3ee]'}`} />
             </button>
           </div>
 
           {/* Text Line */}
-          <form onSubmit={handleSendText} className="flex items-center gap-1.5 pt-0.5">
+          <form onSubmit={handleSendText} className="flex items-center gap-2 pt-0.5">
             <input
               type="text"
-              placeholder="Type command, e.g. 'Shikayat', '2', 'Hisaab'..."
+              placeholder={t.typeCommandPlaceholder}
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              className="flex-1 min-w-0 px-3 py-1.5 bg-[#2a241b] border border-[#aa8c58] rounded text-xs text-[#fbf6ea] focus:outline-none focus:ring-1 focus:ring-[#9e2a2b] font-mono"
+              className="flex-1 min-w-0 px-3 py-1.5 bg-[#081b27] border border-[#1d4d62] rounded-lg text-xs text-[#edf8f5] focus:outline-none focus:ring-1 focus:ring-[#22d3ee] font-mono placeholder-[#5f8d83]"
             />
             <button
               type="submit"
-              className="px-3 py-1.5 rounded bg-[#2d6a4f] hover:bg-[#1b4332] text-white transition font-bold border border-[#aa8c58] text-xs flex items-center gap-1 shrink-0"
+              className="retro-btn-petrol px-3.5 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1 shrink-0 cursor-pointer active:scale-95"
             >
               <Send className="w-3.5 h-3.5" />
-              SEND
+              <span>{t.sendBtn}</span>
             </button>
           </form>
         </div>

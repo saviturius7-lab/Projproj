@@ -1,3 +1,5 @@
+export type SupportedLanguage = 'en' | 'kn' | 'te' | 'ta' | 'ml' | 'hi';
+
 export interface WorkLog {
   id: string;
   phone_number: string;

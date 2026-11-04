@@ -81,7 +81,7 @@ export function processIncomingWhatsAppMessage(
     const cleanLast4 = cleanPhone.replace(/\D/g, '').slice(-4);
     const token = result.logData.status === 'disputed'
       ? `DISP-${new Date().getFullYear()}-${Math.floor(1000 + Math.random() * 9000)}`
-      : `SS-WA-${new Date().getFullYear()}-${cleanLast4}-${Math.random().toString(16).substring(2, 6).toUpperCase()}`;
+      : `SS-TEL-${new Date().getFullYear()}-${cleanLast4}-${Math.random().toString(16).substring(2, 6).toUpperCase()}`;
 
     newLog = {
       id: `rec_${Date.now().toString(36)}_${Math.random().toString(36).substring(2, 6)}`,
@@ -103,6 +103,8 @@ export function processIncomingWhatsAppMessage(
 
   return { reply: result.reply, newLog };
 }
+
+export const processTelegraphTransmission = processIncomingWhatsAppMessage;
 
 export function generateAuditText(workerPhone: string, logs: WorkLog[]): string {
   const workerLogs = logs.filter(l => l.phone_number === workerPhone);

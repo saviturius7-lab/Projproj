@@ -3,20 +3,26 @@ import { WorkLog } from './types';
 import { getStoredLogs, resetStoredLogs, saveStoredLogs } from './services/storage';
 import { Header } from './components/Header';
 import { Sidebar } from './components/Sidebar';
-import { WhatsAppConnectHub } from './components/WhatsAppConnectHub';
+import { FieldTelegraphStation } from './components/FieldTelegraphStation';
 import { MetricsOverview } from './components/MetricsOverview';
 import { WorkerProfile } from './components/WorkerProfile';
 import { LiveMap } from './components/LiveMap';
 import { LedgerTable } from './components/LedgerTable';
 import { DigitalReceiptModal } from './components/DigitalReceiptModal';
 import { WhatsAppSimulatorModal } from './components/WhatsAppSimulatorModal';
+import { LanguageProvider, useLanguage } from './context/LanguageContext';
+import { CheckSquare, ListFilter, UserCheck, Map, LayoutGrid } from 'lucide-react';
 
-export const App: React.FC = () => {
+type ActiveViewTab = 'all' | 'attendance' | 'register' | 'worker' | 'map';
+
+const AppContent: React.FC = () => {
+  const { t } = useLanguage();
   const [logs, setLogs] = useState<WorkLog[]>([]);
   const [selectedWorker, setSelectedWorker] = useState<string>('All Workers');
   const [selectedReceiptLog, setSelectedReceiptLog] = useState<WorkLog | null>(null);
   const [isSimulatorOpen, setIsSimulatorOpen] = useState<boolean>(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<ActiveViewTab>('all');
 
   // Sync logs from backend and localStorage
   const fetchLogs = async () => {
@@ -30,7 +36,7 @@ export const App: React.FC = () => {
           return;
         }
       }
-    } catch (e) {
+    } catch {
       // Fallback to client storage
     }
     const local = getStoredLogs();
@@ -39,7 +45,6 @@ export const App: React.FC = () => {
 
   useEffect(() => {
     fetchLogs();
-    // Poll backend every 6 seconds for any live incoming WhatsApp webhooks
     const interval = setInterval(fetchLogs, 6000);
     return () => clearInterval(interval);
   }, []);
@@ -53,28 +58,28 @@ export const App: React.FC = () => {
 
   const handleRefresh = async () => {
     await fetchLogs();
-    triggerToast('Dossier register synchronized with telex webhook node.');
+    triggerToast('✓ Register synchronized with latest records.');
   };
 
   const handleResetData = async () => {
     try {
       await fetch('/api/reset', { method: 'POST' });
-    } catch (e) {
+    } catch {
       // Ignored
     }
     const fresh = resetStoredLogs();
     setLogs(fresh);
     setSelectedWorker('All Workers');
-    triggerToast('Muster records reset to initial archived dossiers.');
+    triggerToast('✓ Records reset to sample data.');
   };
 
   const handleLogCreated = (newLog: WorkLog) => {
     setLogs((prev) => [newLog, ...prev]);
-    triggerToast(`New verified workday voucher issued to ${newLog.phone_number}!`);
+    triggerToast(`✓ New attendance slip #${newLog.verification_token} issued to ${newLog.phone_number}!`);
   };
 
   const handleQuickCheckIn = () => {
-    setIsSimulatorOpen(true);
+    setActiveTab('attendance');
   };
 
   // Derive unique workers
@@ -104,80 +109,159 @@ export const App: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#e5d7b7] text-[#221910] font-typewriter flex flex-col selection:bg-[#6f4e24] selection:text-[#fbf6ea]">
+    <div className="min-h-screen bg-[#05121a] text-[#edf8f5] font-sans flex flex-col selection:bg-[#2dd4bf] selection:text-[#05121a]">
       {/* Toast Notification */}
       {toastMessage && (
-        <div className="fixed top-4 right-4 z-50 bg-[#1a140d] text-[#fbf6ea] px-4 py-2.5 rounded shadow-2xl text-xs border-2 border-[#aa8c58] flex items-center gap-2 animate-bounce">
-          <span className="text-[#9e2a2b] font-bold">●</span>
+        <div className="fixed top-4 right-4 z-50 bg-[#09202c] text-[#edf8f5] px-4 py-3 rounded-lg shadow-2xl text-sm font-semibold border-2 border-[#2dd4bf] flex items-center gap-2.5 animate-bounce shadow-[0_8px_30px_rgba(0,0,0,0.8),0_0_20px_rgba(45,212,191,0.3)]">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#2dd4bf] animate-ping"></span>
           <span>{toastMessage}</span>
         </div>
       )}
 
       {/* Main Container */}
       <div className="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-5 flex-1 flex flex-col">
-        {/* Pre-Internet Header */}
+        {/* Simple Header with Language Selector */}
         <Header
           onOpenSimulator={() => setIsSimulatorOpen(true)}
           onRefresh={handleRefresh}
         />
 
-        {/* Real WhatsApp Connection & Live Webhook Bridge Hub */}
-        <WhatsAppConnectHub
-          onLogReceived={handleLogCreated}
-          onRefreshLedger={fetchLogs}
+        {/* Top 3 Summary Cards */}
+        <MetricsOverview
+          activeLaborers={selectedWorker === 'All Workers' ? activeLaborersCount : 1}
+          totalDays={totalManDays}
+          totalCapital={securedCapital}
         />
 
-        {/* Layout: Sidebar + Main Registry Content */}
+        {/* Easy Fast-Navigation Tabs Bar */}
+        <div className="flex items-center gap-2 overflow-x-auto pb-2.5 mb-6 scrollbar-thin">
+          <button
+            onClick={() => setActiveTab('all')}
+            className={`px-4 py-2.5 rounded-lg text-xs sm:text-sm font-extrabold flex items-center gap-2 whitespace-nowrap transition-all duration-300 ease-out cursor-pointer active:scale-95 ${
+              activeTab === 'all'
+                ? 'bg-gradient-to-r from-[#176d4e] to-[#0f4d37] text-white border-t-2 border-l-2 border-t-[#34d399] border-l-[#34d399] border-b-2 border-r-2 border-b-[#020d09] border-r-[#020d09] shadow-[0_0_18px_rgba(52,211,153,0.3)]'
+                : 'bg-[#0c2330] text-[#9fc7bd] border-t border-l border-t-[#22576f] border-l-[#22576f] border-b border-r border-b-[#03090e] border-r-[#03090e] hover:bg-[#112d3e] hover:text-[#edf8f5] hover:border-t-[#38bdf8]'
+            }`}
+          >
+            <LayoutGrid className="w-4 h-4 text-[#38bdf8]" />
+            <span>{t.tabAllInOne}</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('attendance')}
+            className={`px-4 py-2.5 rounded-lg text-xs sm:text-sm font-extrabold flex items-center gap-2 whitespace-nowrap transition-all duration-300 ease-out cursor-pointer active:scale-95 ${
+              activeTab === 'attendance'
+                ? 'bg-gradient-to-r from-[#176d4e] to-[#0f4d37] text-white border-t-2 border-l-2 border-t-[#34d399] border-l-[#34d399] border-b-2 border-r-2 border-b-[#020d09] border-r-[#020d09] shadow-[0_0_18px_rgba(52,211,153,0.3)]'
+                : 'bg-[#0c2330] text-[#9fc7bd] border-t border-l border-t-[#22576f] border-l-[#22576f] border-b border-r border-b-[#03090e] border-r-[#03090e] hover:bg-[#112d3e] hover:text-[#edf8f5] hover:border-t-[#38bdf8]'
+            }`}
+          >
+            <CheckSquare className="w-4 h-4 text-[#34d399]" />
+            <span>{t.tabMarkAttendance}</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('register')}
+            className={`px-4 py-2.5 rounded-lg text-xs sm:text-sm font-extrabold flex items-center gap-2 whitespace-nowrap transition-all duration-300 ease-out cursor-pointer active:scale-95 ${
+              activeTab === 'register'
+                ? 'bg-gradient-to-r from-[#176d4e] to-[#0f4d37] text-white border-t-2 border-l-2 border-t-[#34d399] border-l-[#34d399] border-b-2 border-r-2 border-b-[#020d09] border-r-[#020d09] shadow-[0_0_18px_rgba(52,211,153,0.3)]'
+                : 'bg-[#0c2330] text-[#9fc7bd] border-t border-l border-t-[#22576f] border-l-[#22576f] border-b border-r border-b-[#03090e] border-r-[#03090e] hover:bg-[#112d3e] hover:text-[#edf8f5] hover:border-t-[#38bdf8]'
+            }`}
+          >
+            <ListFilter className="w-4 h-4 text-[#38bdf8]" />
+            <span>{t.tabAttendanceList}</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('worker')}
+            className={`px-4 py-2.5 rounded-lg text-xs sm:text-sm font-extrabold flex items-center gap-2 whitespace-nowrap transition-all duration-300 ease-out cursor-pointer active:scale-95 ${
+              activeTab === 'worker'
+                ? 'bg-gradient-to-r from-[#176d4e] to-[#0f4d37] text-white border-t-2 border-l-2 border-t-[#34d399] border-l-[#34d399] border-b-2 border-r-2 border-b-[#020d09] border-r-[#020d09] shadow-[0_0_18px_rgba(52,211,153,0.3)]'
+                : 'bg-[#0c2330] text-[#9fc7bd] border-t border-l border-t-[#22576f] border-l-[#22576f] border-b border-r border-b-[#03090e] border-r-[#03090e] hover:bg-[#112d3e] hover:text-[#edf8f5] hover:border-t-[#38bdf8]'
+            }`}
+          >
+            <UserCheck className="w-4 h-4 text-[#2dd4bf]" />
+            <span>{t.tabWorkerPassbook}</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('map')}
+            className={`px-4 py-2.5 rounded-lg text-xs sm:text-sm font-extrabold flex items-center gap-2 whitespace-nowrap transition-all duration-300 ease-out cursor-pointer active:scale-95 ${
+              activeTab === 'map'
+                ? 'bg-gradient-to-r from-[#176d4e] to-[#0f4d37] text-white border-t-2 border-l-2 border-t-[#34d399] border-l-[#34d399] border-b-2 border-r-2 border-b-[#020d09] border-r-[#020d09] shadow-[0_0_18px_rgba(52,211,153,0.3)]'
+                : 'bg-[#0c2330] text-[#9fc7bd] border-t border-l border-t-[#22576f] border-l-[#22576f] border-b border-r border-b-[#03090e] border-r-[#03090e] hover:bg-[#112d3e] hover:text-[#edf8f5] hover:border-t-[#38bdf8]'
+            }`}
+          >
+            <Map className="w-4 h-4 text-[#38bdf8]" />
+            <span>{t.tabWorkMap}</span>
+          </button>
+        </div>
+
+        {/* Layout: Sidebar + Main Content */}
         <div className="flex flex-col lg:flex-row gap-6 items-start flex-1">
           {/* Controls Sidebar */}
           <Sidebar
             workers={uniqueWorkers}
             selectedWorker={selectedWorker}
-            onSelectWorker={setSelectedWorker}
+            onSelectWorker={(worker) => {
+              setSelectedWorker(worker);
+              if (worker !== 'All Workers' && activeTab === 'all') {
+                setActiveTab('worker');
+              }
+            }}
             onOpenSimulator={() => setIsSimulatorOpen(true)}
             onQuickCheckIn={handleQuickCheckIn}
             onResetData={handleResetData}
           />
 
-          {/* Main Dashboard Section */}
+          {/* Main Workspace Section based on Active Tab */}
           <main className="flex-1 w-full min-w-0 space-y-6">
-            {/* Top 3 Physical Ledger Tabs */}
-            <MetricsOverview
-              activeLaborers={selectedWorker === 'All Workers' ? activeLaborersCount : 1}
-              totalDays={totalManDays}
-              totalCapital={securedCapital}
-            />
+            {/* 1. Mark Attendance Section */}
+            {(activeTab === 'all' || activeTab === 'attendance') && (
+              <FieldTelegraphStation
+                onLogReceived={handleLogCreated}
+                onRefreshLedger={fetchLogs}
+                onOpenReceipt={(log) => setSelectedReceiptLog(log)}
+                selectedWorker={selectedWorker}
+                workers={uniqueWorkers}
+              />
+            )}
 
-            {/* Individual Worker Profile Details & Timeline */}
-            <WorkerProfile
-              selectedWorker={selectedWorker}
-              workerLogs={filteredLogs}
-              allLogs={logs}
-              onOpenReceipt={(log) => setSelectedReceiptLog(log)}
-            />
+            {/* 2. Worker Passbook Section */}
+            {(activeTab === 'all' || activeTab === 'worker') && (
+              <WorkerProfile
+                selectedWorker={selectedWorker}
+                workerLogs={filteredLogs}
+                allLogs={logs}
+                onOpenReceipt={(log) => setSelectedReceiptLog(log)}
+              />
+            )}
 
-            {/* Map Deployment */}
-            <LiveMap
-              logs={filteredLogs}
-              selectedWorker={selectedWorker}
-              onOpenReceipt={(log) => setSelectedReceiptLog(log)}
-            />
+            {/* 3. Daily Attendance Register Table */}
+            {(activeTab === 'all' || activeTab === 'register') && (
+              <LedgerTable
+                logs={filteredLogs}
+                onOpenReceipt={(log) => setSelectedReceiptLog(log)}
+              />
+            )}
 
-            {/* Work Log Ledger */}
-            <LedgerTable
-              logs={filteredLogs}
-              onOpenReceipt={(log) => setSelectedReceiptLog(log)}
-            />
+            {/* 4. Map Deployment Section */}
+            {(activeTab === 'all' || activeTab === 'map') && (
+              <LiveMap
+                logs={filteredLogs}
+                selectedWorker={selectedWorker}
+                onOpenReceipt={(log) => setSelectedReceiptLog(log)}
+              />
+            )}
           </main>
         </div>
 
-        {/* Gazette Ledger Footer */}
-        <footer className="mt-12 pt-4 pb-6 border-t-2 border-[#aa8c58] text-center text-[11px] font-typewriter text-[#684f33] flex flex-col sm:flex-row items-center justify-between gap-2">
+        {/* Simple Accessible Footer */}
+        <footer className="mt-12 pt-4 pb-6 border-t-2 border-[#526a3c]/30 text-center text-xs sm:text-sm font-medium text-[#2d4726] flex flex-col sm:flex-row items-center justify-between gap-2">
           <div>
-            <strong>GOVERNMENT OF INDIA • UNORGANIZED LABOUR PROTECTION MIGRANT ACT REGISTER</strong>
+            <strong>{t.footerActTitle}</strong>
           </div>
-          <div className="italic text-[#9e2a2b]">
-            [ OFFICIAL PHYSICAL LEDGER • TELEX NODE #1974 ]
+          <div className="text-[#19616e] font-bold">
+            {t.footerNodeNote}
           </div>
         </footer>
       </div>
@@ -195,6 +279,14 @@ export const App: React.FC = () => {
         currentPhoneNumber={selectedWorker !== 'All Workers' ? selectedWorker : '+919876543210'}
       />
     </div>
+  );
+};
+
+export const App: React.FC = () => {
+  return (
+    <LanguageProvider>
+      <AppContent />
+    </LanguageProvider>
   );
 };
 
