@@ -20,10 +20,32 @@
 
 body {
   margin: 0;
-  background-color: #f7a3bf;
-  /* Dual gradient matching Image 1: Orchid/Candy Pink Sky into grassy Olive hill at bottom */
+  background-color: #c46687;
+  /* Realistic atmospheric optical twilight sky: 
+     Dusky berry-rose zenith -> warm salmon-peach -> golden apricot -> luminous celadon/seafoam twilight band -> rolling atmospheric olive landscape */
   background-image: 
-    linear-gradient(180deg, #f49ab8 0%, #f7a9c3 40%, #e886a8 60%, #9db74e 88%, #7c9438 100%);
+    /* Subtle painterly stipple to eliminate digital banding and provide fine art lithograph texture */
+    radial-gradient(rgba(255, 255, 255, 0.09) 1px, transparent 1px),
+    /* Soft atmospheric horizon twilight glow */
+    radial-gradient(ellipse 100% 50% at 50% 70%, rgba(254, 235, 195, 0.42) 0%, rgba(205, 238, 208, 0.28) 40%, rgba(232, 142, 156, 0.08) 75%, transparent 100%),
+    /* True optical gradient through atmospheric twilight layers */
+    linear-gradient(180deg, 
+      #8c3f5f 0%, 
+      #a64d70 8%, 
+      #c36284 18%, 
+      #da7795 28%, 
+      #e88d9b 38%, 
+      #f3a59b 48%, 
+      #fac1a1 56%, 
+      #fae0ba 64%, 
+      #e3eed3 71%, 
+      #beddb4 77%, 
+      #96c58c 83%, 
+      #719c4b 89%, 
+      #51752f 94%, 
+      #38531b 100%
+    );
+  background-size: 22px 22px, 100% 100%, 100% 100%;
   background-attachment: fixed;
   color: #232b28;
   font-family: 'Inter', 'Noto Sans', 'Noto Sans Devanagari', 'Noto Sans Kannada', 'Noto Sans Telugu', 'Noto Sans Tamil', 'Noto Sans Malayalam', system-ui, sans-serif;

@@ -10,21 +10,29 @@ import { LiveMap } from './components/LiveMap';
 import { LedgerTable } from './components/LedgerTable';
 import { DigitalReceiptModal } from './components/DigitalReceiptModal';
 import { WhatsAppSimulatorModal } from './components/WhatsAppSimulatorModal';
+import { TutorialModal } from './components/TutorialModal';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
-import { CheckSquare, ListFilter, UserCheck, Map, LayoutGrid } from 'lucide-react';
+import { CheckSquare, ListFilter, UserCheck, Map, LayoutGrid, BookOpen, HardHat, ClipboardCheck } from 'lucide-react';
 
 import { BoidsCanvas } from './components/BoidsCanvas';
 
 type ActiveViewTab = 'all' | 'attendance' | 'register' | 'worker' | 'map';
 
 const AppContent: React.FC = () => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const [logs, setLogs] = useState<WorkLog[]>([]);
   const [selectedWorker, setSelectedWorker] = useState<string>('All Workers');
   const [selectedReceiptLog, setSelectedReceiptLog] = useState<WorkLog | null>(null);
   const [isSimulatorOpen, setIsSimulatorOpen] = useState<boolean>(false);
+  const [isTutorialOpen, setIsTutorialOpen] = useState<boolean>(false);
+  const [tutorialRole, setTutorialRole] = useState<'worker' | 'admin'>('worker');
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<ActiveViewTab>('all');
+
+  const handleOpenTutorial = (role: 'worker' | 'admin' = 'worker') => {
+    setTutorialRole(role);
+    setIsTutorialOpen(true);
+  };
 
   // Sync logs from backend and localStorage
   const fetchLogs = async () => {
@@ -129,6 +137,7 @@ const AppContent: React.FC = () => {
         <Header
           onOpenSimulator={() => setIsSimulatorOpen(true)}
           onRefresh={handleRefresh}
+          onOpenTutorial={handleOpenTutorial}
         />
 
         {/* 3 Storybook Dollhouse Rooms (Library, Living Room, Safe) */}
@@ -216,6 +225,7 @@ const AppContent: React.FC = () => {
             onOpenSimulator={() => setIsSimulatorOpen(true)}
             onQuickCheckIn={handleQuickCheckIn}
             onResetData={handleResetData}
+            onOpenTutorial={handleOpenTutorial}
           />
 
           {/* Main Workspace Section based on Active Tab */}
@@ -271,6 +281,36 @@ const AppContent: React.FC = () => {
         </footer>
       </div>
 
+      {/* Floating Quick Field Guide Launcher in bottom-right corner */}
+      <div className="fixed bottom-4 right-4 z-40 flex items-center gap-2">
+        <button
+          onClick={() => handleOpenTutorial('worker')}
+          className="comic-btn-emerald px-3 sm:px-3.5 py-2 text-xs font-black shadow-[3px_3px_0px_#232b28] flex items-center gap-1.5 cursor-pointer active:scale-95"
+          title="Open Worker Walkthrough"
+        >
+          <HardHat className="w-3.5 h-3.5" />
+          <span>{language === 'hi' ? 'मजदूर गाइड' : 
+                 language === 'kn' ? 'ಕಾರ್ಮಿಕ ಗೈಡ್' : 
+                 language === 'te' ? 'కార్మిక గైడ్' : 
+                 language === 'ta' ? 'தொழிலாளர்' : 
+                 language === 'ml' ? 'തൊഴിലാളി' : 
+                 'Worker Guide'}</span>
+        </button>
+        <button
+          onClick={() => handleOpenTutorial('admin')}
+          className="comic-btn-teal px-3 sm:px-3.5 py-2 text-xs font-black shadow-[3px_3px_0px_#232b28] flex items-center gap-1.5 cursor-pointer active:scale-95"
+          title="Open Admin & Supervisor Walkthrough"
+        >
+          <ClipboardCheck className="w-3.5 h-3.5" />
+          <span>{language === 'hi' ? 'ठेकेदार गाइड' : 
+                 language === 'kn' ? 'ಮೇಲ್ವಿಚಾರಕ' : 
+                 language === 'te' ? 'సూపర్‌వైజర్' : 
+                 language === 'ta' ? 'மேற்பார்வையாளர்' : 
+                 language === 'ml' ? 'സൂപ്പർവൈസർ' : 
+                 'Admin Guide'}</span>
+        </button>
+      </div>
+
       {/* Modals */}
       <DigitalReceiptModal
         log={selectedReceiptLog}
@@ -282,6 +322,17 @@ const AppContent: React.FC = () => {
         onClose={() => setIsSimulatorOpen(false)}
         onLogCreated={handleLogCreated}
         currentPhoneNumber={selectedWorker !== 'All Workers' ? selectedWorker : '+919876543210'}
+      />
+
+      <TutorialModal
+        isOpen={isTutorialOpen}
+        onClose={() => setIsTutorialOpen(false)}
+        initialRole={tutorialRole}
+        onNavigateTab={(tab) => {
+          setActiveTab(tab);
+          triggerToast(`✓ Switched to ${tab} view`);
+        }}
+        onOpenSimulator={() => setIsSimulatorOpen(true)}
       />
     </div>
   );

@@ -1,11 +1,12 @@
 import React from 'react';
-import { RefreshCw, Radio, Globe, ShieldCheck } from 'lucide-react';
+import { RefreshCw, Radio, Globe, ShieldCheck, BookOpen, HardHat, ClipboardCheck } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 import { SupportedLanguage } from '../types';
 
 interface HeaderProps {
   onOpenSimulator: () => void;
   onRefresh: () => void;
+  onOpenTutorial: (role?: 'worker' | 'admin') => void;
 }
 
 const LANGUAGES: Array<{ code: SupportedLanguage; label: string; native: string }> = [
@@ -17,7 +18,7 @@ const LANGUAGES: Array<{ code: SupportedLanguage; label: string; native: string 
   { code: 'ml', label: 'Malayalam', native: 'മലയാളം' },
 ];
 
-export const Header: React.FC<HeaderProps> = ({ onOpenSimulator, onRefresh }) => {
+export const Header: React.FC<HeaderProps> = ({ onOpenSimulator, onRefresh, onOpenTutorial }) => {
   const { language, setLanguage, t } = useLanguage();
 
   return (
@@ -84,9 +85,40 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSimulator, onRefresh }) =>
 
         {/* Action Controls with Tactile Storybook Buttons */}
         <div className="flex items-center gap-2.5 flex-wrap shrink-0">
+          {/* Main Tutorial Button with quick role switches */}
+          <div className="flex items-center bg-[#faf5e8] border-2 border-[#232b28] rounded-[255px_15px_225px_15px/15px_225px_15px_255px] shadow-[3px_3px_0px_#232b28] p-0.5 overflow-hidden">
+            <button
+              onClick={() => onOpenTutorial('worker')}
+              className="px-3 py-1.5 text-xs font-black flex items-center gap-1.5 text-[#232b28] hover:bg-[#38a169] hover:text-white rounded-lg transition-colors cursor-pointer"
+              title="Open Worker Guide"
+            >
+              <HardHat className="w-3.5 h-3.5 text-[#38a169] hover:text-white shrink-0" />
+              <span>{language === 'hi' ? 'मजदूर गाइड' : 
+                     language === 'kn' ? 'ಕಾರ್ಮಿಕ ಗೈಡ್' : 
+                     language === 'te' ? 'కార్మిక గైడ్' : 
+                     language === 'ta' ? 'தொழிலாளர்' : 
+                     language === 'ml' ? 'തൊഴിലാളി' : 
+                     'Worker Guide'}</span>
+            </button>
+            <div className="w-[1.5px] h-4 bg-[#232b28]/30 mx-0.5" />
+            <button
+              onClick={() => onOpenTutorial('admin')}
+              className="px-3 py-1.5 text-xs font-black flex items-center gap-1.5 text-[#232b28] hover:bg-[#1e7587] hover:text-white rounded-lg transition-colors cursor-pointer"
+              title="Open Admin & Supervisor Guide"
+            >
+              <ClipboardCheck className="w-3.5 h-3.5 text-[#1e7587] hover:text-white shrink-0" />
+              <span>{language === 'hi' ? 'ठेकेदार गाइड' : 
+                     language === 'kn' ? 'ಮೇಲ್ವಿಚಾರಕ' : 
+                     language === 'te' ? 'పర్యవేక్షకుడు' : 
+                     language === 'ta' ? 'மேற்பார்வையாளர்' : 
+                     language === 'ml' ? 'സൂപ്പർവൈസർ' : 
+                     'Admin Guide'}</span>
+            </button>
+          </div>
+
           <button
             onClick={onRefresh}
-            className="comic-btn-cream inline-flex items-center gap-1.5 px-3.5 py-2 text-xs sm:text-sm font-black cursor-pointer active:scale-95"
+            className="comic-btn-cream inline-flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm font-black cursor-pointer active:scale-95"
             title="Refresh records"
           >
             <RefreshCw className="w-4 h-4 text-[#1e7587] shrink-0" />
@@ -95,7 +127,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenSimulator, onRefresh }) =>
 
           <button
             onClick={onOpenSimulator}
-            className="comic-btn-pink inline-flex items-center gap-2 px-4 py-2 text-xs sm:text-sm font-black cursor-pointer active:scale-95"
+            className="comic-btn-pink inline-flex items-center gap-2 px-3.5 py-2 text-xs sm:text-sm font-black cursor-pointer active:scale-95"
           >
             <Radio className="w-4 h-4 text-white shrink-0 animate-pulse" />
             <span>{t.telexConsoleBtn}</span>

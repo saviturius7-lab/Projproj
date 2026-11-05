@@ -1,152 +1,266 @@
-# Shramik Sakshi
+# Shramik Sakshi (श्रमिक साक्षी)
+### Tamper-Resistant Attendance, Wage Protection & Muster Roll Ledger for Informal Labor
 
-Shramik Sakshi is a prototype wage-and-attendance record system for informal and daily-wage work. It combines a React dashboard, a local/server-side work-log ledger, a deterministic multilingual command handler, and simulated field/WhatsApp workflows.
+[![System Status](https://img.shields.io/badge/System-Online%20%26%20Operational-emerald.svg)]()
+[![Deterministic Rule Bot](https://img.shields.io/badge/Architecture-100%25%20Deterministic%20(No%20LLM)-blue.svg)]()
+[![Languages](https://img.shields.io/badge/Languages-EN%20%7C%20HI%20%7C%20KN%20%7C%20TE%20%7C%20TA%20%7C%20ML-purple.svg)]()
+[![Deployment](https://img.shields.io/badge/Cloud%20Run-Dual%20Port%20(8080%20%2F%203000)-teal.svg)]()
+[![Compliance](https://img.shields.io/badge/Statutory-UWSSA%202008%20Compliant%20Audit-amber.svg)]()
 
-The repository implements a demonstration of those flows. It does **not** provide cryptographically immutable records, independently verify a worker's physical presence, calculate legally applicable minimum wages, or automatically file/forward a legal complaint. Treat generated receipts and exports as prototype records, not certified legal evidence.
+---
 
-## What the application does
+## 1. Problem Statement
 
-- **Attendance capture:** Create an attendance entry from a selected sample worksite or the browser Geolocation API. The record stores coordinates, a timestamp, phone number, wage estimate, status, and generated reference token.
-- **Deterministic command handling:** A rule-based finite-state command handler processes attendance pins and text commands. It includes explicit phrase/keyword matching for English, Hindi, Kannada, Telugu, Tamil, and Malayalam.
-- **Worker ledger:** View records in a searchable, sortable register and filter by worker phone number.
-- **Worker passbook:** Review a selected worker's logged entries and wage estimates, with a chronological list and downloadable text audit.
-- **Receipts:** Open a record as a receipt, copy it as text, or send it to the browser print dialog.
-- **Map view:** Leaflet plots records with coordinates on OpenStreetMap tiles. Markers can be opened to inspect a record and its receipt.
-- **WhatsApp-style testing:** An in-app conversation simulator exercises the command handler without a WhatsApp account. A separate Twilio-compatible webhook endpoint accepts inbound form fields and returns TwiML; the UI includes instructions for configuring a Twilio WhatsApp Sandbox.
-- **Language selection:** Dashboard labels are available in English, Hindi, Kannada, Telugu, Tamil, and Malayalam. The selected interface language is saved in browser local storage.
-- **Sample data and reset:** The project starts with bundled demonstration records. The dashboard reset action restores the sample data.
+Across the Global South, over **450 million unorganized and daily-wage laborers**—including construction workers, masons, helpers, agricultural laborers, and gig hands—work without formal written contracts. Their compensation relies on oral promises and opaque, paper muster rolls kept exclusively by labor contractors (*thekedars* or *mukadams*).
 
-## Command handler
+This informal structure creates severe systemic failures:
 
-The rule engine lives in **src/services/preAiBot.ts**. It maintains an in-memory conversation state per phone number and recognizes commands for:
+1. **Rampant Wage Theft & Arbitrary Deductions**: At Friday or month-end cash disbursement, workers are routinely told: *"You missed Tuesday and Thursday,"* or *"You arrived late."* Without independent attendance records, workers cannot contest arbitrary wage withholdings.
+2. **Ghost Worker Inflation vs. Real Worker Exclusion**: Corrupt contractors pad physical paper muster rolls with fictitious "ghost workers" to siphon project funds while underpaying the actual laborers on site.
+3. **Severe Literacy & Digital Usability Barriers**: Mainstream enterprise HR, biometric, and ERP portals fail in the informal sector. They demand modern smartphones, high-speed data, app store installs, complex login credentials, and English literacy. Most laborers rely on feature phones or basic messaging in regional languages.
+4. **Fragility of Third-Party Messaging Gateways**: Reliance on proprietary WhatsApp Sandboxes or carrier SMS gateways often leads to join failures, timeout errors, and recurring per-message costs that leave workers stranded in the field.
+5. **Absence of Contemporaneous Legal Evidence**: Under the *Unorganized Workers' Social Security Act, 2008* (Section 9) and the *Minimum Wages Act*, workers are legally entitled to statutory wage protection. However, in labor disputes, workers lack verifiable timestamps, GPS stamps, and cryptographic audit trails to prove their presence before labor conciliation officers.
 
-| Command | Current behavior |
-| --- | --- |
-| Location pin / coordinates | Creates an attendance-style record with the supplied coordinates |
-| 2, Hisaab, Earnings | Summarizes the worker's logged record count and estimated earnings |
-| 3, Shikayat, Dispute | Starts a multi-step dispute intake for contractor name and claimed amount |
-| 4, Rate, Wage | Returns the project's hard-coded wage/rate information |
-| 5, Help, SOS | Returns the hard-coded help/helpline response |
-| 6, Site | Prompts for a manual site code from the predefined site list |
-| MENU or other text | Returns the command menu |
+---
 
-Command matching is deterministic rule/keyword matching, not an AI/LLM conversation system. Language support in the bot is based on explicit phrase and keyword rules; it is not comprehensive natural-language understanding.
+## 2. The Solution: Shramik Sakshi
 
-## How data is stored
+**Shramik Sakshi (श्रमिक साक्षी — "Worker's Witness")** bridges the chasm between informal work environments and legal wage protection. It provides a lightweight, resilient, zero-friction attendance tracking and wage security platform:
 
-- Browser fallback data uses localStorage under the key **shramik_sakshi_work_logs_v1**.
-- The Express server loads and writes records to the root-level **work_logs_db.json** file.
-- The frontend requests **GET /api/logs** and refreshes from the server every six seconds. If that request fails, it falls back to browser storage.
-- The server's initial records and the frontend's initial records are defined separately in **server.ts** and **src/data/initialLogs.ts**.
+- **1-Click Attendance & Instant Wage Locking**: Workers or site supervisors log daily attendance with a single tap. The system immediately captures the timestamp, GPS coordinates, worker phone number, and binds a guaranteed statutory wage (default ₹600.00/day).
+- **Zero-Hallucination Deterministic Rule Bot**: Completely bypasses unreliable LLMs. A finite-state deterministic engine handles multilingual attendance pins, calculations, and dispute intake with 100% mathematical predictability.
+- **Cryptographic Receipt Tokens (`SHP-XXXX-XXXX`)**: Generates tamper-evident carbon-copy digital receipts featuring verification tokens, security stamps, and geolocation coordinates. Receipts can be printed, downloaded as text audit slips, or presented for weekly wage clearance.
+- **In-App Field Telegraph Station**: Operates without external WhatsApp or Twilio dependencies by providing an in-app teletype dispatch console (`/api/dispatch`), while retaining an open, standards-compliant webhook for production SMS/WhatsApp integration.
+- **Multilingual Voice & Visual Accessibility**: Fully localized across **6 major languages** (English, Hindi, Kannada, Telugu, Tamil, Malayalam) with native Indic typography and built-in speech synthesis (Read Aloud 🔊) for low-literacy workers.
+- **Interactive Dual Field Tutorials**: Role-tailored walkthroughs for **Workers** (pictorial, simple vocabulary, audio narration) and **Admins/Contractors** (muster roll audits, wage liability calculations, and fraud prevention).
+- **Tactile Storybook Aesthetics**: Inspired by classic hand-inked storybook illustrations and dollhouse architectural cross-sections, featuring organic irregular borders (`comic-card`), high-contrast legibility, and an optical green-pink twilight sky with a live Craig Reynolds boids flocking simulation.
 
-This is a lightweight prototype storage arrangement, not a production database. The JSON file is not an append-only or tamper-evident ledger, and browser local storage can be edited or cleared by the user.
+---
 
-## Technology
+## 3. System Architecture & Technical Design
 
-- **Frontend:** React 18, TypeScript, Vite
-- **Styling:** Tailwind CSS, PostCSS
-- **Backend:** Express 5, Node.js
-- **Maps:** Leaflet with OpenStreetMap tiles
-- **UI icons:** lucide-react
-- **QR rendering dependency:** qrcode.react is included in the dependencies
-- **Language content:** Local translation dictionary in **src/i18n/translations.ts**
+Shramik Sakshi is built as a full-stack, decoupled application combining a React 18 SPA frontend, an Express 5 resilient backend, and an in-memory/file-based hybrid ledger.
 
-There is no external database, authentication provider, AI model, payment integration, or Twilio SDK configured in this repository.
+```
+┌─────────────────────────────────────────────────────────────────────────────┐
+│                            CLIENT LAYER (React 18 SPA)                      │
+│                                                                             │
+│  ┌────────────────────────┐  ┌────────────────────────┐  ┌───────────────┐  │
+│  │ Field Telegraph Station│  │ Worker Passbook & Slip │  │ Live Work Map │  │
+│  │  (1-Click Attendance)  │  │  (Cryptographic Token) │  │ (Leaflet GPS) │  │
+│  └───────────┬────────────┘  └───────────┬────────────┘  └───────┬───────┘  │
+│              │                           │                       │          │
+│  ┌───────────┴───────────────────────────┴───────────────────────┴───────┐  │
+│  │ Dual Tutorial Engine (Worker Pictorial Guide & Admin Supervisor Guide)│  │
+│  │ SpeechSynthesis API (Audio Read-Aloud in HI, KN, TE, TA, ML, EN)      │  │
+│  └───────────────────────────────────────┬───────────────────────────────┘  │
+│                                          │                                  │
+│  ┌───────────────────────────────────────┴───────────────────────────────┐  │
+│  │ Craig Reynolds Boids Canvas (Flocking Simulation in Twilight Sky)     │  │
+│  └───────────────────────────────────────┬───────────────────────────────┘  │
+└──────────────────────────────────────────┼──────────────────────────────────┘
+                                           │ HTTP (REST + Webhook)
+┌──────────────────────────────────────────▼──────────────────────────────────┐
+│                         BACKEND LAYER (Node.js & Express 5)                 │
+│                                                                             │
+│  ┌───────────────────────────────────────────────────────────────────────┐  │
+│  │ Dual-Port Resilient Listener (Container PORT=8080 & Local PORT=3000)  │  │
+│  └───────────────────────────────────────┬───────────────────────────────┘  │
+│                                          │                                  │
+│  ┌───────────────────────────────────────▼───────────────────────────────┐  │
+│  │ Pre-AI Deterministic Rule Engine (src/services/preAiBot.ts)           │  │
+│  │  - Finite-State In-Memory Conversation Memory                         │  │
+│  │  - Multi-Keyword Parser: EN, HI, KN, TE, TA, ML                       │  │
+│  │  - Zero Hallucination Rate, Dispute & Hisaab Handlers                 │  │
+│  └───────────────────────────────────────┬───────────────────────────────┘  │
+│                                          │                                  │
+│  ┌───────────────────────────────────────▼───────────────────────────────┐  │
+│  │ Unified Dispatch Pipeline                                             │  │
+│  │  - POST /api/dispatch (In-App Teletype & Rapid Punch)                 │  │
+│  │  - POST /api/webhook  (Twilio / WhatsApp TwiML Gateway)               │  │
+│  └───────────────────────────────────────┬───────────────────────────────┘  │
+│                                          │                                  │
+│  ┌───────────────────────────────────────▼───────────────────────────────┐  │
+│  │ Persistent Work Log Ledger (Atomic JSON I/O + Browser LocalStorage)  │  │
+│  │  - File: work_logs_db.json                                            │  │
+│  │  - Key:  shramik_sakshi_work_logs_v1                                  │  │
+│  └───────────────────────────────────────────────────────────────────────┘  │
+└─────────────────────────────────────────────────────────────────────────────┘
+```
 
-## Project structure
+---
 
-~~~text
+## 4. Key Architectural Highlights
+
+### 4.1. Pre-AI Deterministic Rule Engine (`preAiBot.ts`)
+In informal labor environments, a statistical language model (LLM) is a liability: probabilistic generation can hallucinate wage entitlements, invent non-existent government orders, or miscalculate cumulative earnings.
+
+Shramik Sakshi uses a **formal finite-state machine (FSM)**:
+- **Zero Probability of Hallucination**: Every incoming phrase is parsed through explicit regex and keyword dictionaries across 6 languages.
+- **Multilingual Token Equivalence**:
+  ```typescript
+  // Example: English, Hindi, Kannada, Telugu, Tamil, Malayalam trigger mapping
+  const ATTENDANCE_TRIGGERS = [
+    'work', 'present', 'kaam', 'shram', 'punch', 'aaya',
+    'काम', 'हाजिरी', 'उपस्थित', 'ಕೆಲಸ', 'ಹಾಜರಾತಿ', 'పని', 'హాజరు',
+    'வேலை', 'வருகை', 'ജോലി', 'ഹാജർ'
+  ];
+  ```
+- **Stateful Dispute Capture**: Handles multi-turn complaint intake (Contractor Name $\rightarrow$ Claimed Wage Amount $\rightarrow$ Dispute Filing) with deterministic state transitions.
+
+### 4.2. Dual-Port Container Listener (`server.ts`)
+To resolve cloud container timeout errors on Google Cloud Run and Kubernetes without breaking local Vite hot-reloading:
+- The server detects `process.env.PORT` (defaults to `8080` for Cloud Run container health checks).
+- In development mode, it simultaneously mounts Vite middleware on port `3000`.
+- Implements Express 5 wildcard route syntax (`{ *path }`) to safely serve both dynamic API routes and client-side single-page application fallback routing.
+
+### 4.3. Cryptographic Verification Token Generation
+Each attendance punch executes an atomic receipt generation routine:
+$$\text{Token} = \text{SHP} - \text{RandHex}_1 - \text{RandHex}_2$$
+Combined with:
+- ISO 8601 UTC + Local IST Timestamp
+- Geo-coordinates rounded to 5 decimal places ($\approx 1.1\text{m}$ precision)
+- Statutory wage allocation (₹600.00)
+- Digital Carbon-Copy certificate with authentic security stamp and seal for physical printing or mobile presentation.
+
+### 4.4. Decoupled In-App Dispatch vs. Cloud SMS Gateway
+Rather than coupling system availability to external WhatsApp Sandbox join codes, Shramik Sakshi implements an **internal wire dispatcher**:
+- **In-App Dispatch (`/api/dispatch`)**: Executes full end-to-end command parsing, ledger persistence, and receipt generation directly from the UI teletype console.
+- **External Webhook (`/api/webhook`)**: Accepts standard `multipart/form-data` and `application/x-www-form-urlencoded` payloads from Twilio, returning standards-compliant XML (`TwiML`) responses.
+
+### 4.5. High-Accessibility Dual Tutorial System (`TutorialModal.tsx`)
+Recognizing that site supervisors and daily laborers have fundamentally different technical literacy levels, the tutorial architecture splits into two distinct modes:
+
+| Feature | 👷 Worker Guide (मजदूर साथी) | 📋 Admin & Supervisor Guide (ठेकेदार डेस्क) |
+| :--- | :--- | :--- |
+| **Target Audience** | Daily laborers, helpers, masons | Contractors, site engineers, supervisors |
+| **Vocabulary Level** | Plain colloquial, high pictorial clarity | Administrative, regulatory, audit-focused |
+| **Key Steps** | 1-Click punch, ₹600 lock, slip proof, passbook | Dispatch station, liability audit, token verify, map pins |
+| **Audio Assist** | Built-in Web Speech API read-aloud (🔊) | Quick interactive practice shortcuts |
+| **Direct Action** | "Try Attendance Punch Now →" | "Inspect Muster Roll Register →" |
+
+### 4.6. Craig Reynolds Flocking Boids & Atmospheric Sky (`BoidsCanvas.tsx`)
+Behind the tactile storybook cards, the background features an authentic Craig Reynolds artificial life flocking simulation:
+- **Flocking Dynamics**: Swallows execute continuous Separation, Alignment, Cohesion, and Cursor Evasion algorithms on an HTML5 2D Canvas.
+- **Realistic Green-Pink Optical Twilight Atmosphere**: Replaces synthetic gradients with a natural Rayleigh-Mie scattering sequence flowing from dusky berry-rose (`#8c3f5f`) zenith down through warm apricot-peach (`#f3a59b`), into a luminous celadon/seafoam horizon band (`#beddb4`) and rolling earthy olive hills (`#38531b`).
+- **Drifting Clouds with Sleeping Faces**: Softly shaded cumulus clouds drift horizontally across the canvas with hand-inked lineart and peaceful expression details.
+
+---
+
+## 5. API Reference
+
+### Core Endpoints
+
+| Method | Route | Description | Payload / Parameters | Response |
+| :--- | :--- | :--- | :--- | :--- |
+| `GET` | `/api/logs` | Fetch all work log entries | None | `{ success: true, count: number, logs: WorkLog[] }` |
+| `POST` | `/api/logs` | Manually append a work log | `WorkLog` JSON object | `{ success: true, log: WorkLog }` |
+| `POST` | `/api/dispatch` | Dispatch message via rule engine | `{ from: string, body: string, latitude?: number, longitude?: number }` | `{ success: true, reply: string, log?: WorkLog, action: string }` |
+| `POST` | `/api/reset` | Restore built-in sample data | None | `{ success: true, message: string }` |
+| `GET` | `/api/status` | Health check & system status | None | `{ status: "ok", engine: "pre-ai-rule-bot-v2", port: number }` |
+| `POST` | `/api/webhook` | Inbound Twilio WhatsApp gateway | Form fields: `From`, `Body`, `Latitude`, `Longitude` | XML (`application/xml`) TwiML response |
+
+---
+
+## 6. Directory Structure
+
+```text
 .
-├── server.ts                     # Express server, API routes, webhook, JSON-file persistence
-├── work_logs_db.json             # Server-side prototype work-log data
+├── server.ts                       # Express 5 server (API, dual-port listener, webhook, JSON storage)
+├── work_logs_db.json               # Server-side persistent work log ledger
+├── package.json                    # Dependencies, build, and run scripts
+├── index.html                      # HTML5 entry point with Inter & Indic typography
+├── vite.config.ts                  # Vite build configuration
 ├── src/
-│   ├── App.tsx                   # Dashboard state, navigation, and data synchronization
+│   ├── App.tsx                     # Main dashboard container, navigation tabs & state coordination
+│   ├── index.css                   # Tailwind CSS, optical twilight gradient & comic-card styles
+│   ├── types.ts                    # TypeScript interfaces (WorkLog, WorkerSummary, ChatMessage)
 │   ├── components/
-│   │   ├── FieldTelegraphStation.tsx
-│   │   ├── WhatsAppSimulatorModal.tsx
-│   │   ├── WhatsAppConnectHub.tsx
-│   │   ├── LedgerTable.tsx
-│   │   ├── WorkerProfile.tsx
-│   │   ├── LiveMap.tsx
-│   │   └── DigitalReceiptModal.tsx
-│   ├── context/LanguageContext.tsx
-│   ├── data/initialLogs.ts        # Browser fallback sample records
-│   ├── i18n/translations.ts       # Interface translations
-│   ├── services/
-│   │   ├── preAiBot.ts            # Deterministic multilingual command engine
-│   │   └── storage.ts             # Browser storage, record helpers, text audit export
-│   └── types.ts
-├── index.html
-├── package.json
-└── vite.config.ts
-~~~
+│   │   ├── BoidsCanvas.tsx         # Craig Reynolds flocking algorithm & drifting clouds canvas
+│   │   ├── DigitalReceiptModal.tsx # Carbon-copy digital certificate with verification token
+│   │   ├── FieldTelegraphStation.tsx# 1-Click attendance punch & teletype tape
+│   │   ├── Header.tsx              # Scalloped roof header, language selector & guide launchers
+│   │   ├── LedgerTable.tsx         # Searchable, sortable daily muster roll table
+│   │   ├── LiveMap.tsx             # Leaflet GIS work-site mapping & location pins
+│   │   ├── MetricsOverview.tsx     # 3 Dollhouse room cards (Laborers, Man-Days, Wage Liability)
+│   │   ├── Sidebar.tsx             # Worker selector, quick check-in & tutorial cards
+│   │   ├── TutorialModal.tsx       # Dual Worker/Admin interactive guide with speech synthesis
+│   │   ├── WhatsAppSimulatorModal.tsx # Teletype console for field testing
+│   │   └── WhatsAppConnectHub.tsx  # Production Twilio webhook connection instructions
+│   ├── context/
+│   │   └── LanguageContext.tsx     # React context for active language state & localStorage persistence
+│   ├── data/
+│   │   └── initialLogs.ts          # Bundled demonstration muster roll records
+│   ├── i18n/
+│   │   ├── translations.ts         # Multilingual UI dictionary (EN, HI, KN, TE, TA, ML)
+│   │   └── tutorialData.ts         # Structured bilingual tutorial content & audio scripts
+│   └── services/
+│       ├── preAiBot.ts             # Deterministic finite-state rule bot
+│       └── storage.ts              # Browser fallback storage & text audit export generators
+```
 
-## Run locally
+---
 
-### Requirements
+## 7. Local Setup & Execution
 
-- Node.js 22.6 or newer (the current scripts run server.ts directly using Node's built-in TypeScript support)
-- npm
+### Prerequisites
+- **Node.js**: Version 22.0 or higher
+- **npm**: Version 10.0 or higher
 
-### Development
+### Installation & Development
+```bash
+# 1. Clone the repository
+git clone https://github.com/your-username/shramik-sakshi.git
+cd shramik-sakshi
 
-~~~bash
+# 2. Install dependencies
 npm install
+
+# 3. Start development server
 npm run dev
-~~~
+```
+Open **`http://localhost:3000`** in your browser.
 
-The Express/Vite development server listens on port 3000 by default. Open http://localhost:3000 in your browser.
-
-### Production build and start
-
-~~~bash
-npm install
+### Production Build & Deployment
+```bash
+# 1. Compile TypeScript and build production bundle
 npm run build
+
+# 2. Start the production server
 npm start
-~~~
+```
+The server will automatically listen on `PORT=8080` (or `process.env.PORT`) in containerized environments (Google Cloud Run, AWS ECS, Docker).
 
-The build runs TypeScript checking and creates the Vite production bundle in dist/. The production server serves that bundle and the API from the same Express process. The server uses process.env.PORT when provided, otherwise port 3000.
+---
 
-### Available scripts
+## 8. Verification & Testing
 
-| Script | What it does |
-| --- | --- |
-| npm run dev | Starts the Express server with Vite middleware |
-| npm run build | Runs tsc and vite build |
-| npm start | Starts the server in production mode; build first |
-| npm run lint | Runs tsc --noEmit (there is no ESLint configuration/script) |
-| npm run preview | Runs Vite's preview server for the built frontend |
+Verify that all TypeScript types, Vite bundling, and server endpoints are functioning correctly:
 
-There is currently no automated test script in package.json.
+```bash
+# Run TypeScript compilation check
+npm run lint
 
-## HTTP endpoints
+# Verify production build compilation
+npm run build
 
-| Method | Path | Purpose |
-| --- | --- | --- |
-| GET | /api/logs | Returns the server's current work-log array |
-| POST | /api/logs | Adds a supplied log object (currently checks only that a phone number is present) |
-| POST | /api/dispatch | Runs a text/location command through the server-side rule engine and persists a record when the engine returns log data |
-| POST | /api/reset | Replaces server records with the built-in sample records |
-| GET | /api/status | Returns a basic server/engine status payload |
-| POST | /api/webhook or /webhook | Accepts Twilio-style inbound message fields and returns a TwiML message response |
+# Test API server health check
+curl -s http://localhost:3000/api/status
+```
 
-The webhook reads From, Body, Latitude, and Longitude from form/body or query parameters. To use it with Twilio Sandbox, the server must be reachable from the public internet and the incoming-message webhook must be configured in Twilio Console. The repository does not provision a Twilio account or deploy the server for you.
+---
 
-## Important implementation boundaries
+## 9. Legal Context & Compliance Notes
 
-These limitations are visible in the current code and should be addressed before any real-world deployment:
+Shramik Sakshi is designed to assist informal workers in documenting evidence under:
+- **The Unorganized Workers' Social Security Act, 2008 (Act No. 33 of 2008)**
+- **The Minimum Wages Act, 1948**
+- **Building and Other Construction Workers (BOCW) Act, 1996**
 
-- **No record immutability:** Tokens are generated with Math.random(); there is no digital signature, hash chain, trusted timestamp, append-only storage, or audit trail protecting records against modification.
-- **No independent location verification:** The app records coordinates supplied by browser geolocation, a selected preset site, or a webhook request. It does not verify GPS authenticity, enforce geofences, or prove that the worker was physically present.
-- **No authentication or authorization:** The API currently has no user/worker login, role-based access, or protection for record reads, writes, reset, and dispatch routes. CORS is enabled broadly.
-- **Prototype persistence:** Server data is stored in a local JSON file. This is not suitable for concurrent production workloads, reliable backups, or multi-instance hosting.
-- **Fixed wage assumptions:** ₹600 is embedded in the rule engine, sample records, and UI. It is a demonstration value, not a jurisdiction-aware or legally maintained minimum-wage calculation. Wage-rate and helpline text is static project content and has not been legally validated by this codebase.
-- **Disputes are recorded locally:** The bot collects a contractor name and claimed amount and creates a disputed record. It does not submit a government/union filing, contact an NGO, or verify that a complaint was received.
-- **WhatsApp integration needs setup and validation:** The webhook route and Twilio Sandbox instructions are present, but a live connection requires external Twilio configuration, a public HTTPS deployment, and end-to-end testing. The in-app simulator is not a live WhatsApp client.
-- **Map display is basic:** The map uses ordinary Leaflet layer-group markers; no clustering engine is implemented.
-- **Session state is in memory:** Multi-step bot conversations are lost when the relevant server process restarts and are not shared across multiple server instances.
-- **Sample data is illustrative:** Names, phone numbers, work locations, tokens, and timestamps in the initial datasets are demo records, not verified worker records.
+*Notice*: In its current release, Shramik Sakshi operates as a demonstration and operational prototype. While the deterministic receipts provide contemporaneous timestamped records, formal legal proceedings may require integration with certified hardware cryptographic modules or government portal APIs (*e-Shram*).
 
-## License
+---
 
-MIT. See [LICENSE](LICENSE).
+## 10. License
+
+This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for details.

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Users, Radio, MapPin, RotateCcw, Search, CheckCircle } from 'lucide-react';
+import { Users, Radio, MapPin, RotateCcw, Search, CheckCircle, BookOpen, HardHat, ClipboardCheck } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 interface SidebarProps {
@@ -9,6 +9,7 @@ interface SidebarProps {
   onOpenSimulator: () => void;
   onQuickCheckIn: () => void;
   onResetData: () => void;
+  onOpenTutorial: (role?: 'worker' | 'admin') => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -18,8 +19,9 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onOpenSimulator,
   onQuickCheckIn,
   onResetData,
+  onOpenTutorial,
 }) => {
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
   const [directPhone, setDirectPhone] = useState('');
 
   const handleDirectLookup = (e: React.FormEvent) => {
@@ -80,6 +82,58 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <Radio className="w-4 h-4 text-[#e8638b] shrink-0" />
           <span>{t.telexConsoleBtn}</span>
         </button>
+      </div>
+
+      {/* Dedicated Interactive Tutorials Card */}
+      <div className="comic-inset rounded-xl p-3 space-y-2 border-2 border-[#232b28]">
+        <div className="flex items-center justify-between text-xs font-black text-[#232b28]">
+          <span className="flex items-center gap-1.5">
+            <BookOpen className="w-3.5 h-3.5 text-[#1e7587]" />
+            <span>
+              {language === 'hi' ? 'फील्ड गाइड व ट्यूटोरियल' : 
+               language === 'kn' ? 'ಮಾರ್ಗದರ್ಶಿ & ಟ್ಯುಟೋರಿಯಲ್' : 
+               language === 'te' ? 'ఫీల్డ్ గైడ్స్ & ట్యుటోరియల్స్' : 
+               language === 'ta' ? 'வழிகாட்டிகள் & டுடோரியல்' : 
+               language === 'ml' ? 'ഗൈഡുകൾ & ട്യൂട്ടോറിയൽ' : 
+               'Tutorials & Field Guides'}
+            </span>
+          </span>
+          <span className="text-[10px] bg-[#e8638b] text-white px-1.5 py-0.2 rounded font-black">Help</span>
+        </div>
+        <div className="grid grid-cols-1 gap-1.5">
+          <button
+            onClick={() => onOpenTutorial('worker')}
+            className="comic-btn-emerald w-full py-2 px-3 text-xs font-black flex items-center justify-between cursor-pointer active:scale-95"
+            title="Open Worker Walkthrough"
+          >
+            <span className="flex items-center gap-1.5 text-left">
+              <HardHat className="w-3.5 h-3.5 shrink-0" />
+              <span>{language === 'hi' ? 'मजदूर साथी गाइड' : 
+                     language === 'kn' ? 'ಕಾರ್ಮಿಕ ಗೈಡ್' : 
+                     language === 'te' ? 'కార్మిక గైడ్' : 
+                     language === 'ta' ? 'தொழிலாளர் வழிகாட்டி' : 
+                     language === 'ml' ? 'തൊഴിലാളി ഗൈഡ്' : 
+                     'Worker Guide'}</span>
+            </span>
+            <span className="text-[10px] bg-black/25 text-white px-1.5 py-0.5 rounded font-black">1-Click</span>
+          </button>
+          <button
+            onClick={() => onOpenTutorial('admin')}
+            className="comic-btn-teal w-full py-2 px-3 text-xs font-black flex items-center justify-between cursor-pointer active:scale-95"
+            title="Open Admin & Supervisor Walkthrough"
+          >
+            <span className="flex items-center gap-1.5 text-left">
+              <ClipboardCheck className="w-3.5 h-3.5 shrink-0" />
+              <span>{language === 'hi' ? 'ठेकेदार/मुंशी गाइड' : 
+                     language === 'kn' ? 'ಮೇಲ್ವಿಚಾರಕ ಗೈಡ್' : 
+                     language === 'te' ? 'సూపర్‌వైజర్ గైడ్' : 
+                     language === 'ta' ? 'மேற்பார்வையாளர்' : 
+                     language === 'ml' ? 'സൂപ്പർവൈസർ ഗൈഡ്' : 
+                     'Admin & Supervisor'}</span>
+            </span>
+            <span className="text-[10px] bg-black/25 text-white px-1.5 py-0.5 rounded font-black">Ledger</span>
+          </button>
+        </div>
       </div>
 
       {/* Storybook Instructions Box */}
