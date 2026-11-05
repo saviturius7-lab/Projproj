@@ -1,7 +1,7 @@
 import React from 'react';
 import { WorkLog } from '../types';
 import { formatISTDateTime } from '../services/storage';
-import { X, Copy, Printer, CheckCircle2, ShieldCheck, Stamp } from 'lucide-react';
+import { X, Copy, Printer, CheckCircle2, ShieldCheck } from 'lucide-react';
 import { useLanguage } from '../context/LanguageContext';
 
 interface DigitalReceiptModalProps {
@@ -39,116 +39,116 @@ export const DigitalReceiptModal: React.FC<DigitalReceiptModalProps> = ({ log, o
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-sm overflow-y-auto font-sans transition-all duration-300">
-      <div className="carbon-receipt border-4 border-[#125841] rounded-2xl max-w-lg w-full p-5 sm:p-7 relative text-[#071922] my-auto shadow-2xl animate-in fade-in zoom-in-95 duration-200">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#232b28]/60 backdrop-blur-xs overflow-y-auto font-sans transition-all duration-300">
+      <div className="carbon-receipt max-w-lg w-full p-5 sm:p-7 relative text-[#232b28] my-auto animate-in fade-in zoom-in-95 duration-200">
         {/* Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 p-2 rounded-full hover:bg-[#d8ece4] text-[#071922] transition-colors cursor-pointer"
+          className="absolute top-4 right-4 p-1.5 rounded-full hover:bg-[#fedbe6] text-[#232b28] border-2 border-[#232b28] transition-colors cursor-pointer"
         >
-          <X className="w-5 h-5" />
+          <X className="w-4 h-4" />
         </button>
 
-        {/* Header Block */}
-        <div className="text-center pb-3 mb-4 border-b-2 border-[#125841]/30">
-          <div className="inline-flex items-center gap-1.5 bg-[#0f4d39] text-[#f7fbf9] px-3.5 py-1 rounded text-xs font-black uppercase mb-1.5 shadow-sm">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#7ff0cb]" />
+        {/* Header Block with Scalloped Motif */}
+        <div className="text-center pb-3 mb-4 border-b-2 border-[#232b28]/25">
+          <div className="inline-flex items-center gap-1.5 bg-[#e8638b] text-white border-2 border-[#232b28] px-3.5 py-1 rounded-full text-xs font-black uppercase mb-1.5 shadow-[2px_2px_0px_#232b28]">
+            <ShieldCheck className="w-3.5 h-3.5" />
             <span>{t.receiptModalHeader}</span>
           </div>
-          <h3 className="text-lg sm:text-xl font-black text-[#071922] mt-1 tracking-tight">
+          <h3 className="text-lg sm:text-xl font-black text-[#232b28] mt-1 tracking-tight">
             {t.dailyWageProofTitle}
           </h3>
-          <p className="text-xs text-[#205244] mt-0.5 font-semibold">
+          <p className="text-xs text-[#55694a] mt-0.5 font-bold">
             {t.satelliteSystemNote}
           </p>
         </div>
 
         {/* Details Card */}
-        <div className="bg-white/90 border-2 border-[#125841]/40 p-4 rounded-xl space-y-2.5 text-sm my-3 shadow-sm">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-[#125841]/15 pb-2">
-            <span className="text-[#326154] font-bold text-xs uppercase">{t.receiptDocketToken}:</span>
-            <span className="font-mono font-black text-[#0e513c] text-sm sm:text-base">
+        <div className="bg-white border-2 border-[#232b28] p-4 rounded-xl space-y-2.5 text-sm my-3 shadow-[2px_2px_0px_#232b28]">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-[#232b28]/15 pb-2">
+            <span className="text-[#55694a] font-bold text-xs uppercase">{t.receiptDocketToken}:</span>
+            <span className="font-mono font-black text-[#1e7587] text-sm sm:text-base">
               {log.verification_token}
             </span>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-[#125841]/15 pb-2">
-            <span className="text-[#326154] font-bold text-xs uppercase">{t.receiptWorkerPhone}:</span>
-            <span className="font-bold text-[#071922] font-mono">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-[#232b28]/15 pb-2">
+            <span className="text-[#55694a] font-bold text-xs uppercase">{t.receiptWorkerPhone}:</span>
+            <span className="font-black text-[#232b28] font-mono">
               {log.phone_number}
             </span>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-[#125841]/15 pb-2">
-            <span className="text-[#326154] font-bold text-xs uppercase">{t.receiptDateTime}:</span>
-            <span className="font-bold text-[#071922] font-mono">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 border-b border-[#232b28]/15 pb-2">
+            <span className="text-[#55694a] font-bold text-xs uppercase">{t.receiptDateTime}:</span>
+            <span className="font-bold text-[#232b28] font-mono">
               {formatISTDateTime(log.created_at)}
             </span>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 border-b border-[#125841]/15 pb-2">
-            <span className="text-[#326154] font-bold text-xs uppercase">{t.receiptGpsCoords}:</span>
-            <span className="text-left sm:text-right font-bold text-[#145374] font-mono">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 border-b border-[#232b28]/15 pb-2">
+            <span className="text-[#55694a] font-bold text-xs uppercase">{t.receiptGpsCoords}:</span>
+            <span className="text-left sm:text-right font-black text-[#1e7587] font-mono">
               {log.latitude?.toFixed(4)}, {log.longitude?.toFixed(4)}
-              <span className="block text-xs text-[#0f6047] font-black">
+              <span className="block text-xs text-[#2f855a] font-black">
                 ✓ {t.receiptSatelliteVerified}
               </span>
             </span>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 border-b border-[#125841]/15 pb-2">
-            <span className="text-[#326154] font-bold text-xs uppercase">{t.receiptFieldSite}:</span>
-            <span className="text-left sm:text-right font-bold text-[#071922] max-w-xs">
+          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1 border-b border-[#232b28]/15 pb-2">
+            <span className="text-[#55694a] font-bold text-xs uppercase">{t.receiptFieldSite}:</span>
+            <span className="text-left sm:text-right font-bold text-[#232b28] max-w-xs">
               {log.location_name || log.raw_message}
             </span>
           </div>
 
           {/* Statutory Wage Guarantee Callout */}
-          <div className="bg-[#e7f5ef] border-2 border-[#125841] p-3 rounded-lg flex items-center justify-between mt-2">
+          <div className="bg-[#d8f1e9] border-2 border-[#232b28] p-3 rounded-xl flex items-center justify-between mt-2 shadow-[2px_2px_0px_#232b28]">
             <div>
-              <span className="text-xs font-black text-[#0f4d39] uppercase tracking-wide block">
+              <span className="text-xs font-black text-[#2f855a] uppercase tracking-wide block">
                 {t.receiptStatutoryWage}
               </span>
-              <span className="text-xs text-[#205244] font-medium">Guaranteed Legal Rate</span>
+              <span className="text-xs text-[#2c473c] font-bold">Guaranteed Legal Rate</span>
             </div>
-            <div className="text-2xl sm:text-3xl font-black text-[#0e513c] font-mono">
+            <div className="text-2xl sm:text-3xl font-black text-[#232b28] font-mono">
               ₹{log.estimated_wage.toFixed(2)}
             </div>
           </div>
         </div>
 
-        {/* Legal Protection Plain Notice */}
-        <div className="bg-[#eff8f4] border border-[#125841]/40 p-3 rounded-lg text-xs leading-relaxed text-[#071922] my-3">
-          <div className="font-black text-[#0f4d39] uppercase mb-1 flex items-center gap-1.5">
-            <CheckCircle2 className="w-4 h-4 text-[#0f4d39]" />
+        {/* Legal Protection Notice */}
+        <div className="bg-[#fef5dc] border-2 border-[#232b28] p-3 rounded-xl text-xs leading-relaxed text-[#232b28] my-3 shadow-[2px_2px_0px_#232b28]">
+          <div className="font-black text-[#232b28] uppercase mb-1 flex items-center gap-1.5">
+            <CheckCircle2 className="w-4 h-4 text-[#2f855a]" />
             <span>{t.legalProtectionNoticeTitle}</span>
           </div>
-          <p className="font-medium">
+          <p className="font-semibold text-[#4d5e46]">
             {t.legalProtectionNoticeBody}
           </p>
         </div>
 
-        {/* Action Buttons with 3D tactile feel */}
-        <div className="flex flex-wrap items-center justify-end gap-2.5 pt-3 border-t-2 border-[#125841]/30">
+        {/* Action Buttons */}
+        <div className="flex flex-wrap items-center justify-end gap-2.5 pt-3 border-t-2 border-[#232b28]/20">
           <button
             onClick={copyReceiptText}
-            className="px-4 py-2 rounded-lg bg-[#d8ece4] hover:bg-[#c6e4d9] text-[#071922] text-xs font-bold flex items-center gap-1.5 transition cursor-pointer active:scale-95"
+            className="comic-btn-cream px-4 py-2 text-xs font-black flex items-center gap-1.5 cursor-pointer active:scale-95"
           >
-            <Copy className="w-4 h-4 text-[#125841]" />
+            <Copy className="w-4 h-4 text-[#1e7587]" />
             <span>{t.copyTranscriptBtn}</span>
           </button>
 
           <button
             onClick={printReceipt}
-            className="px-4 py-2 rounded-lg bg-[#0f4d39] hover:bg-[#0b3c2c] text-white text-xs font-bold flex items-center gap-1.5 transition cursor-pointer active:scale-95 shadow-md"
+            className="comic-btn-emerald px-4 py-2 text-xs font-black flex items-center gap-1.5 cursor-pointer active:scale-95"
           >
-            <Printer className="w-4 h-4 text-[#7ff0cb]" />
+            <Printer className="w-4 h-4 text-white" />
             <span>{t.printBtn}</span>
           </button>
 
           <button
             onClick={onClose}
-            className="px-4 py-2 rounded-lg bg-[#145374] hover:bg-[#0e3c54] text-white text-xs font-bold transition cursor-pointer active:scale-95"
+            className="comic-btn-pink px-4 py-2 text-xs font-black cursor-pointer active:scale-95"
           >
             <span>{t.dismissBtn}</span>
           </button>

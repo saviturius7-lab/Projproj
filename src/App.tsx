@@ -13,6 +13,8 @@ import { WhatsAppSimulatorModal } from './components/WhatsAppSimulatorModal';
 import { LanguageProvider, useLanguage } from './context/LanguageContext';
 import { CheckSquare, ListFilter, UserCheck, Map, LayoutGrid } from 'lucide-react';
 
+import { BoidsCanvas } from './components/BoidsCanvas';
+
 type ActiveViewTab = 'all' | 'attendance' | 'register' | 'worker' | 'map';
 
 const AppContent: React.FC = () => {
@@ -109,89 +111,92 @@ const AppContent: React.FC = () => {
   );
 
   return (
-    <div className="min-h-screen bg-[#05121a] text-[#edf8f5] font-sans flex flex-col selection:bg-[#2dd4bf] selection:text-[#05121a]">
-      {/* Toast Notification */}
+    <div className="min-h-screen relative font-sans flex flex-col selection:bg-[#f49ab8] selection:text-[#232b28]">
+      {/* Flocking Boids Simulation Canvas running smoothly behind the UI */}
+      <BoidsCanvas />
+
+      {/* Toast Notification styled as comic speech bubble */}
       {toastMessage && (
-        <div className="fixed top-4 right-4 z-50 bg-[#09202c] text-[#edf8f5] px-4 py-3 rounded-lg shadow-2xl text-sm font-semibold border-2 border-[#2dd4bf] flex items-center gap-2.5 animate-bounce shadow-[0_8px_30px_rgba(0,0,0,0.8),0_0_20px_rgba(45,212,191,0.3)]">
-          <span className="w-2.5 h-2.5 rounded-full bg-[#2dd4bf] animate-ping"></span>
+        <div className="fixed top-5 right-5 z-50 bg-[#fffef9] text-[#232b28] px-4 py-3 border-[2.5px] border-[#232b28] rounded-[255px_15px_225px_15px/15px_225px_15px_255px] shadow-[4px_4px_0px_#232b28] text-sm font-extrabold flex items-center gap-2.5 animate-bounce">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#38a169]"></span>
           <span>{toastMessage}</span>
         </div>
       )}
 
-      {/* Main Container */}
-      <div className="max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-5 flex-1 flex flex-col">
-        {/* Simple Header with Language Selector */}
+      {/* Main Container sitting cleanly above the boids canvas */}
+      <div className="relative z-10 max-w-7xl mx-auto w-full px-3 sm:px-6 lg:px-8 py-5 flex-1 flex flex-col">
+        {/* Storybook Cottage Header */}
         <Header
           onOpenSimulator={() => setIsSimulatorOpen(true)}
           onRefresh={handleRefresh}
         />
 
-        {/* Top 3 Summary Cards */}
+        {/* 3 Storybook Dollhouse Rooms (Library, Living Room, Safe) */}
         <MetricsOverview
           activeLaborers={selectedWorker === 'All Workers' ? activeLaborersCount : 1}
           totalDays={totalManDays}
           totalCapital={securedCapital}
         />
 
-        {/* Easy Fast-Navigation Tabs Bar */}
-        <div className="flex items-center gap-2 overflow-x-auto pb-2.5 mb-6 scrollbar-thin">
+        {/* Irregular Hand-Drawn Navigation Tabs */}
+        <div className="flex items-center gap-2.5 overflow-x-auto pb-3 mb-6 scrollbar-thin">
           <button
             onClick={() => setActiveTab('all')}
-            className={`px-4 py-2.5 rounded-lg text-xs sm:text-sm font-extrabold flex items-center gap-2 whitespace-nowrap transition-all duration-300 ease-out cursor-pointer active:scale-95 ${
+            className={`px-4 py-2.5 text-xs sm:text-sm font-black flex items-center gap-2 whitespace-nowrap transition-all duration-200 cursor-pointer active:scale-95 ${
               activeTab === 'all'
-                ? 'bg-gradient-to-r from-[#176d4e] to-[#0f4d37] text-white border-t-2 border-l-2 border-t-[#34d399] border-l-[#34d399] border-b-2 border-r-2 border-b-[#020d09] border-r-[#020d09] shadow-[0_0_18px_rgba(52,211,153,0.3)]'
-                : 'bg-[#0c2330] text-[#9fc7bd] border-t border-l border-t-[#22576f] border-l-[#22576f] border-b border-r border-b-[#03090e] border-r-[#03090e] hover:bg-[#112d3e] hover:text-[#edf8f5] hover:border-t-[#38bdf8]'
+                ? 'bg-[#1e7587] text-white border-[2.5px] border-[#232b28] rounded-[255px_15px_225px_15px/15px_225px_15px_255px] shadow-[3px_3px_0px_#232b28]'
+                : 'comic-btn-cream'
             }`}
           >
-            <LayoutGrid className="w-4 h-4 text-[#38bdf8]" />
+            <LayoutGrid className="w-4 h-4" />
             <span>{t.tabAllInOne}</span>
           </button>
 
           <button
             onClick={() => setActiveTab('attendance')}
-            className={`px-4 py-2.5 rounded-lg text-xs sm:text-sm font-extrabold flex items-center gap-2 whitespace-nowrap transition-all duration-300 ease-out cursor-pointer active:scale-95 ${
+            className={`px-4 py-2.5 text-xs sm:text-sm font-black flex items-center gap-2 whitespace-nowrap transition-all duration-200 cursor-pointer active:scale-95 ${
               activeTab === 'attendance'
-                ? 'bg-gradient-to-r from-[#176d4e] to-[#0f4d37] text-white border-t-2 border-l-2 border-t-[#34d399] border-l-[#34d399] border-b-2 border-r-2 border-b-[#020d09] border-r-[#020d09] shadow-[0_0_18px_rgba(52,211,153,0.3)]'
-                : 'bg-[#0c2330] text-[#9fc7bd] border-t border-l border-t-[#22576f] border-l-[#22576f] border-b border-r border-b-[#03090e] border-r-[#03090e] hover:bg-[#112d3e] hover:text-[#edf8f5] hover:border-t-[#38bdf8]'
+                ? 'bg-[#38a169] text-white border-[2.5px] border-[#232b28] rounded-[225px_15px_255px_15px/15px_255px_15px_225px] shadow-[3px_3px_0px_#232b28]'
+                : 'comic-btn-cream'
             }`}
           >
-            <CheckSquare className="w-4 h-4 text-[#34d399]" />
+            <CheckSquare className="w-4 h-4" />
             <span>{t.tabMarkAttendance}</span>
           </button>
 
           <button
             onClick={() => setActiveTab('register')}
-            className={`px-4 py-2.5 rounded-lg text-xs sm:text-sm font-extrabold flex items-center gap-2 whitespace-nowrap transition-all duration-300 ease-out cursor-pointer active:scale-95 ${
+            className={`px-4 py-2.5 text-xs sm:text-sm font-black flex items-center gap-2 whitespace-nowrap transition-all duration-200 cursor-pointer active:scale-95 ${
               activeTab === 'register'
-                ? 'bg-gradient-to-r from-[#176d4e] to-[#0f4d37] text-white border-t-2 border-l-2 border-t-[#34d399] border-l-[#34d399] border-b-2 border-r-2 border-b-[#020d09] border-r-[#020d09] shadow-[0_0_18px_rgba(52,211,153,0.3)]'
-                : 'bg-[#0c2330] text-[#9fc7bd] border-t border-l border-t-[#22576f] border-l-[#22576f] border-b border-r border-b-[#03090e] border-r-[#03090e] hover:bg-[#112d3e] hover:text-[#edf8f5] hover:border-t-[#38bdf8]'
+                ? 'bg-[#1e7587] text-white border-[2.5px] border-[#232b28] rounded-[255px_15px_225px_15px/15px_225px_15px_255px] shadow-[3px_3px_0px_#232b28]'
+                : 'comic-btn-cream'
             }`}
           >
-            <ListFilter className="w-4 h-4 text-[#38bdf8]" />
+            <ListFilter className="w-4 h-4" />
             <span>{t.tabAttendanceList}</span>
           </button>
 
           <button
             onClick={() => setActiveTab('worker')}
-            className={`px-4 py-2.5 rounded-lg text-xs sm:text-sm font-extrabold flex items-center gap-2 whitespace-nowrap transition-all duration-300 ease-out cursor-pointer active:scale-95 ${
+            className={`px-4 py-2.5 text-xs sm:text-sm font-black flex items-center gap-2 whitespace-nowrap transition-all duration-200 cursor-pointer active:scale-95 ${
               activeTab === 'worker'
-                ? 'bg-gradient-to-r from-[#176d4e] to-[#0f4d37] text-white border-t-2 border-l-2 border-t-[#34d399] border-l-[#34d399] border-b-2 border-r-2 border-b-[#020d09] border-r-[#020d09] shadow-[0_0_18px_rgba(52,211,153,0.3)]'
-                : 'bg-[#0c2330] text-[#9fc7bd] border-t border-l border-t-[#22576f] border-l-[#22576f] border-b border-r border-b-[#03090e] border-r-[#03090e] hover:bg-[#112d3e] hover:text-[#edf8f5] hover:border-t-[#38bdf8]'
+                ? 'bg-[#e8638b] text-white border-[2.5px] border-[#232b28] rounded-[18px_255px_16px_240px/240px_16px_255px_18px] shadow-[3px_3px_0px_#232b28]'
+                : 'comic-btn-cream'
             }`}
           >
-            <UserCheck className="w-4 h-4 text-[#2dd4bf]" />
+            <UserCheck className="w-4 h-4" />
             <span>{t.tabWorkerPassbook}</span>
           </button>
 
           <button
             onClick={() => setActiveTab('map')}
-            className={`px-4 py-2.5 rounded-lg text-xs sm:text-sm font-extrabold flex items-center gap-2 whitespace-nowrap transition-all duration-300 ease-out cursor-pointer active:scale-95 ${
+            className={`px-4 py-2.5 text-xs sm:text-sm font-black flex items-center gap-2 whitespace-nowrap transition-all duration-200 cursor-pointer active:scale-95 ${
               activeTab === 'map'
-                ? 'bg-gradient-to-r from-[#176d4e] to-[#0f4d37] text-white border-t-2 border-l-2 border-t-[#34d399] border-l-[#34d399] border-b-2 border-r-2 border-b-[#020d09] border-r-[#020d09] shadow-[0_0_18px_rgba(52,211,153,0.3)]'
-                : 'bg-[#0c2330] text-[#9fc7bd] border-t border-l border-t-[#22576f] border-l-[#22576f] border-b border-r border-b-[#03090e] border-r-[#03090e] hover:bg-[#112d3e] hover:text-[#edf8f5] hover:border-t-[#38bdf8]'
+                ? 'bg-[#7c9438] text-white border-[2.5px] border-[#232b28] rounded-[255px_15px_225px_15px/15px_225px_15px_255px] shadow-[3px_3px_0px_#232b28]'
+                : 'comic-btn-cream'
             }`}
           >
-            <Map className="w-4 h-4 text-[#38bdf8]" />
+            <Map className="w-4 h-4" />
             <span>{t.tabWorkMap}</span>
           </button>
         </div>

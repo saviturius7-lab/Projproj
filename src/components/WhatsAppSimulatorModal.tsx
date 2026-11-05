@@ -148,20 +148,23 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="retro-card rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl flex flex-col h-[680px] max-h-[92vh]">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-[#232b28]/60 backdrop-blur-xs animate-in fade-in duration-200">
+      <div className="comic-card rounded-2xl max-w-lg w-full overflow-hidden shadow-2xl flex flex-col h-[680px] max-h-[92vh] bg-white">
+        {/* Scalloped Roof Trim at Modal Top */}
+        <div className="h-3 roof-scallops border-b-2 border-[#232b28]" />
+
         {/* Telex Terminal Header */}
-        <div className="bg-[#061824] border-b border-[#1b4b60] p-3 text-[#edf8f5] flex items-center justify-between gap-2">
+        <div className="bg-[#e8638b] border-b-2 border-[#232b28] p-3 text-white flex items-center justify-between gap-2">
           <div className="flex items-center gap-2.5 min-w-0">
-            <Radio className="w-5 h-5 text-[#22d3ee] shrink-0 animate-pulse" />
+            <Radio className="w-5 h-5 text-white shrink-0 animate-pulse" />
             <div className="min-w-0">
               <div className="text-xs font-black uppercase tracking-wide flex flex-wrap items-center gap-1.5 leading-tight">
                 <span>{t.telexTerminalTitle}</span>
-                <span className="retro-stamp-cyan text-[8px] py-0 px-1.5">
+                <span className="bg-[#1e7587] text-white text-[8px] py-0 px-2 rounded-full border border-white">
                   {t.deterministicStamp}
                 </span>
               </div>
-              <div className="text-[10px] text-[#34d399] font-mono truncate mt-0.5">
+              <div className="text-[10px] text-white/90 font-mono truncate mt-0.5">
                 FIELD STATION: WIRE LINE 1974-IND • DFSA SYNTAX ENGINE
               </div>
             </div>
@@ -169,30 +172,30 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
 
           <button
             onClick={onClose}
-            className="p-1 rounded-lg hover:bg-[#102e40] text-[#edf8f5] transition-colors cursor-pointer shrink-0"
+            className="p-1 rounded-full hover:bg-white/20 text-white transition-colors cursor-pointer shrink-0 border border-white"
           >
-            <X className="w-5 h-5" />
+            <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Worker Phone Dial Bar */}
-        <div className="bg-[#081f2f] border-b border-[#1b485d] px-3.5 py-2 text-xs flex flex-wrap items-center gap-2 text-[#edf8f5]">
-          <span className="text-[10px] uppercase font-bold text-[#89b8aa] whitespace-nowrap shrink-0">
+        <div className="bg-[#fef5dc] border-b-2 border-[#232b28] px-3.5 py-2 text-xs flex flex-wrap items-center gap-2 text-[#232b28]">
+          <span className="text-[10px] uppercase font-black text-[#5c6e2b] whitespace-nowrap shrink-0">
             {t.musterLineId}:
           </span>
           <input
             type="text"
             value={phoneNumber}
             onChange={(e) => setPhoneNumber(e.target.value)}
-            className="flex-1 min-w-[140px] px-2.5 py-1 rounded bg-[#05141e] border border-[#1d4d62] text-xs font-mono font-bold text-[#22d3ee] focus:outline-none focus:ring-1 focus:ring-[#22d3ee]"
+            className="flex-1 min-w-[140px] px-2.5 py-1 rounded-lg bg-white border-2 border-[#232b28] text-xs font-mono font-black text-[#232b28] focus:outline-none shadow-[1px_1px_0px_#232b28]"
             placeholder="+91..."
           />
         </div>
 
         {/* Teletype Paper Roll */}
-        <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 retro-inset text-[#edf8f5] font-mono text-xs scrollbar-thin">
-          <div className="text-center my-1 border-b border-dashed border-[#1b485d] pb-1">
-            <span className="text-[9px] uppercase tracking-widest text-[#70a194] font-bold">
+        <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 bg-[#faf6ea] text-[#232b28] text-xs scrollbar-thin">
+          <div className="text-center my-1 border-b-2 border-dashed border-[#232b28]/20 pb-1">
+            <span className="text-[10px] uppercase tracking-widest text-[#55694a] font-black">
               --- {t.telegraphTranscriptHeader} ---
             </span>
           </div>
@@ -205,27 +208,27 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
               }`}
             >
               <div
-                className={`max-w-[90%] p-3.5 rounded-xl text-xs leading-relaxed border transition-all ${
+                className={`max-w-[90%] p-3.5 rounded-2xl text-xs leading-relaxed border-2 border-[#232b28] shadow-[2px_2px_0px_#232b28] transition-all ${
                   m.sender === 'user'
-                    ? 'bg-[#0a2736] border-[#1d556e] text-[#edf8f5]'
-                    : 'bg-[#06261d] border-[#166348] text-[#edf8f5] shadow-md'
+                    ? 'bg-[#fedbe6] text-[#232b28]'
+                    : 'bg-[#ffffff] text-[#232b28]'
                 }`}
               >
-                <div className="text-[9px] font-bold uppercase mb-1.5 text-[#8cbab0] flex items-center justify-between border-b border-white/10 pb-1 gap-2">
+                <div className="text-[9px] font-black uppercase mb-1.5 text-[#55694a] flex items-center justify-between border-b border-[#232b28]/15 pb-1 gap-2">
                   <span className="truncate">{m.sender === 'user' ? t.transmitterWorker : t.expertEngine}</span>
-                  <span className="shrink-0 font-mono text-[#22d3ee]">{m.timestamp.slice(11, 19)}</span>
+                  <span className="shrink-0 font-mono text-[#1e7587] font-bold">{m.timestamp.slice(11, 19)}</span>
                 </div>
 
                 {m.isLocationPin && (
-                  <div className="mb-2 p-2 bg-[#051a24] border border-[#1b4b60] rounded-lg text-[10px] leading-snug">
-                    <strong className="block text-[#22d3ee]">📍 {t.satelliteGpsBroadcast}:</strong>
-                    <span className="font-mono text-[#34d399]">
+                  <div className="mb-2 p-2 bg-[#d8f1e9] border border-[#232b28] rounded-lg text-[10px] leading-snug">
+                    <strong className="block text-[#1e7587]">📍 {t.satelliteGpsBroadcast}:</strong>
+                    <span className="font-mono text-[#2f855a] font-bold">
                       {m.latitude?.toFixed(4)}, {m.longitude?.toFixed(4)}
                     </span>
                   </div>
                 )}
 
-                <div className="whitespace-pre-wrap leading-relaxed font-sans text-xs">
+                <div className="whitespace-pre-wrap leading-relaxed font-semibold">
                   {m.text}
                 </div>
               </div>
@@ -234,36 +237,36 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
         </div>
 
         {/* Telex Quick Buttons */}
-        <div className="bg-[#061824] border-t border-[#1b485d] p-3 space-y-2.5">
+        <div className="bg-[#fffef9] border-t-2 border-[#232b28] p-3 space-y-2.5">
           {/* Quick Pre-AI Rule Triggers */}
           <div className="flex items-center gap-1.5 overflow-x-auto pb-1 text-[10px] scrollbar-thin">
             <button
               onClick={() => sendMessage('MENU')}
-              className="retro-btn-muted px-2.5 py-1 rounded text-[#edf8f5] whitespace-nowrap font-bold shrink-0 cursor-pointer active:scale-95"
+              className="comic-btn-cream px-2.5 py-1 text-[#232b28] whitespace-nowrap font-black shrink-0 cursor-pointer active:scale-95"
             >
               {t.macroMenu}
             </button>
             <button
               onClick={() => sendMessage('Hisaab')}
-              className="retro-btn-muted px-2.5 py-1 rounded text-[#38bdf8] whitespace-nowrap font-bold shrink-0 cursor-pointer active:scale-95"
+              className="comic-btn-cream px-2.5 py-1 text-[#1e7587] whitespace-nowrap font-black shrink-0 cursor-pointer active:scale-95"
             >
               {t.macroHisaab}
             </button>
             <button
               onClick={() => sendMessage('Shikayat')}
-              className="retro-btn-muted px-2.5 py-1 rounded text-[#22d3ee] whitespace-nowrap font-bold shrink-0 cursor-pointer active:scale-95"
+              className="comic-btn-cream px-2.5 py-1 text-[#e8638b] whitespace-nowrap font-black shrink-0 cursor-pointer active:scale-95"
             >
               {t.macroShikayat}
             </button>
             <button
               onClick={() => sendMessage('Rate')}
-              className="retro-btn-muted px-2.5 py-1 rounded text-[#34d399] whitespace-nowrap font-bold shrink-0 cursor-pointer active:scale-95"
+              className="comic-btn-cream px-2.5 py-1 text-[#38a169] whitespace-nowrap font-black shrink-0 cursor-pointer active:scale-95"
             >
               {t.macroRate}
             </button>
             <button
               onClick={() => sendMessage('Help')}
-              className="retro-btn-muted px-2.5 py-1 rounded text-[#fbbf24] whitespace-nowrap font-bold shrink-0 cursor-pointer active:scale-95"
+              className="comic-btn-cream px-2.5 py-1 text-[#d97706] whitespace-nowrap font-black shrink-0 cursor-pointer active:scale-95"
             >
               {t.macroHelp}
             </button>
@@ -274,10 +277,10 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
             <select
               value={selectedSiteIndex}
               onChange={(e) => setSelectedSiteIndex(Number(e.target.value))}
-              className="flex-1 min-w-0 px-2.5 py-1.5 bg-[#081b27] border border-[#1d4d62] rounded-lg text-xs text-[#edf8f5] truncate focus:outline-none cursor-pointer"
+              className="flex-1 min-w-0 px-2.5 py-1.5 bg-white border-2 border-[#232b28] rounded-xl text-xs text-[#232b28] font-bold truncate focus:outline-none cursor-pointer shadow-[1px_1px_0px_#232b28]"
             >
               {PRESET_SITES.map((site, idx) => (
-                <option key={site.name} value={idx} className="bg-[#081b27] text-[#edf8f5]">
+                <option key={site.name} value={idx} className="bg-white text-[#232b28]">
                   📍 {site.name}
                 </option>
               ))}
@@ -285,7 +288,7 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
 
             <button
               onClick={handleSendPresetLocation}
-              className="retro-btn-emerald px-3.5 py-1.5 rounded-lg text-xs font-black whitespace-nowrap shrink-0 cursor-pointer active:scale-95"
+              className="comic-btn-emerald px-3.5 py-1.5 text-xs font-black whitespace-nowrap shrink-0 cursor-pointer active:scale-95"
             >
               {t.broadcastPinBtn}
             </button>
@@ -294,9 +297,9 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
               onClick={handleSendBrowserGPS}
               disabled={isLocating}
               title="Use current device GPS"
-              className="retro-btn-muted p-1.5 rounded-lg text-[#22d3ee] shrink-0 cursor-pointer active:scale-95"
+              className="comic-btn-cream p-1.5 rounded-lg text-[#e8638b] shrink-0 cursor-pointer active:scale-95"
             >
-              <MapPin className={`w-4 h-4 ${isLocating ? 'animate-bounce text-[#22d3ee]' : 'text-[#22d3ee]'}`} />
+              <MapPin className={`w-4 h-4 ${isLocating ? 'animate-bounce text-[#e8638b]' : 'text-[#e8638b]'}`} />
             </button>
           </div>
 
@@ -307,11 +310,11 @@ export const WhatsAppSimulatorModal: React.FC<WhatsAppSimulatorModalProps> = ({
               placeholder={t.typeCommandPlaceholder}
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              className="flex-1 min-w-0 px-3 py-1.5 bg-[#081b27] border border-[#1d4d62] rounded-lg text-xs text-[#edf8f5] focus:outline-none focus:ring-1 focus:ring-[#22d3ee] font-mono placeholder-[#5f8d83]"
+              className="flex-1 min-w-0 px-3 py-1.5 bg-white border-2 border-[#232b28] rounded-xl text-xs text-[#232b28] focus:outline-none font-bold placeholder-[#7d8f78] shadow-[2px_2px_0px_#232b28]"
             />
             <button
               type="submit"
-              className="retro-btn-petrol px-3.5 py-1.5 rounded-lg font-bold text-xs flex items-center gap-1 shrink-0 cursor-pointer active:scale-95"
+              className="comic-btn-teal px-3.5 py-1.5 font-black text-xs flex items-center gap-1 shrink-0 cursor-pointer active:scale-95"
             >
               <Send className="w-3.5 h-3.5" />
               <span>{t.sendBtn}</span>

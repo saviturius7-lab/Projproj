@@ -3,28 +3,29 @@
 @tailwind utilities;
 
 :root {
-  --bg-dark: #05121a;
-  --chassis-card: #0c2330;
-  --chassis-elevated: #112d3e;
-  --petrol-border: #1e556e;
-  --algae-border: #1a5e47;
-  --sapphire-border: #1e4d7a;
-  --phosphor-cyan: #22d3ee;
-  --phosphor-mint: #34d399;
-  --text-primary: #edf8f5;
-  --text-secondary: #94c4b8;
-  --text-muted: #5f8d83;
+  --sky-pink: #f49ab8;
+  --sky-pink-deep: #e27398;
+  --sky-pink-light: #fceaf1;
+  --roof-teal: #1e7587;
+  --roof-teal-light: #2da1b8;
+  --grass-olive: #7c9438;
+  --grass-olive-light: #9db74e;
+  --cottage-pink: #f285a7;
+  --cottage-peach: #f9bfa8;
+  --cottage-mint: #bfe5d9;
+  --parchment: #fffef9;
+  --parchment-cream: #faf5e8;
+  --comic-ink: #232b28;
 }
 
 body {
   margin: 0;
-  background-color: #05121a;
+  background-color: #f7a3bf;
+  /* Dual gradient matching Image 1: Orchid/Candy Pink Sky into grassy Olive hill at bottom */
   background-image: 
-    radial-gradient(rgba(34, 211, 238, 0.12) 0.8px, transparent 0.8px),
-    radial-gradient(rgba(16, 185, 129, 0.10) 0.8px, #05121a 0.8px);
-  background-size: 24px 24px;
-  background-position: 0 0, 12px 12px;
-  color: #edf8f5;
+    linear-gradient(180deg, #f49ab8 0%, #f7a9c3 40%, #e886a8 60%, #9db74e 88%, #7c9438 100%);
+  background-attachment: fixed;
+  color: #232b28;
   font-family: 'Inter', 'Noto Sans', 'Noto Sans Devanagari', 'Noto Sans Kannada', 'Noto Sans Telugu', 'Noto Sans Tamil', 'Noto Sans Malayalam', system-ui, sans-serif;
   min-height: 100vh;
   line-height: 1.5;
@@ -32,247 +33,225 @@ body {
   overflow-x: hidden;
 }
 
-/* 3D Beveled Retro Chassis Card - Pre-Internet Luxury Terminal */
-.retro-card {
-  background-color: #0c2330;
-  border-top: 2px solid #236583;
-  border-left: 2px solid #236583;
-  border-bottom: 2px solid #030a0f;
-  border-right: 2px solid #030a0f;
-  box-shadow: 
-    inset 1px 1px 0px rgba(255, 255, 255, 0.08),
-    inset -1px -1px 0px rgba(0, 0, 0, 0.45),
-    0 8px 24px rgba(2, 6, 9, 0.65);
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+/* Organic Hand-Drawn Wobbly Borders & Ink Panels */
+.comic-card {
+  background-color: #fffef9;
+  border: 2.5px solid #232b28;
+  border-radius: 255px 18px 225px 22px / 20px 225px 18px 255px;
+  box-shadow: 4px 4px 0px #232b28;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
 }
 
-.retro-card:hover {
-  border-top-color: #38bdf8;
-  border-left-color: #2dd4bf;
-  box-shadow: 
-    inset 1px 1px 0px rgba(255, 255, 255, 0.14),
-    inset -1px -1px 0px rgba(0, 0, 0, 0.45),
-    0 12px 32px rgba(2, 6, 9, 0.85),
-    0 0 20px rgba(45, 212, 191, 0.12);
+.comic-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 0px #232b28;
 }
 
-/* Deep Algae Jewel Card */
-.retro-card-algae {
-  background-color: #08261e;
-  border-top: 2px solid #1f7759;
-  border-left: 2px solid #1f7759;
-  border-bottom: 2px solid #020f0b;
-  border-right: 2px solid #020f0b;
-  box-shadow: 
-    inset 1px 1px 0px rgba(255, 255, 255, 0.08),
-    0 8px 24px rgba(2, 6, 9, 0.65);
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+/* Alternative subtle irregular wobble */
+.comic-card-wobble-2 {
+  background-color: #fffef9;
+  border: 2.5px solid #232b28;
+  border-radius: 18px 255px 22px 225px / 225px 18px 255px 20px;
+  box-shadow: 4px 4px 0px #232b28;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  position: relative;
 }
 
-.retro-card-algae:hover {
-  border-top-color: #4ade80;
-  border-left-color: #34d399;
-  box-shadow: 
-    inset 1px 1px 0px rgba(255, 255, 255, 0.15),
-    0 12px 32px rgba(2, 6, 9, 0.85),
-    0 0 20px rgba(52, 211, 153, 0.15);
+.comic-card-wobble-2:hover {
+  transform: translateY(-2px);
+  box-shadow: 6px 6px 0px #232b28;
 }
 
-/* Deep Ocean Sapphire Card */
-.retro-card-sapphire {
-  background-color: #081e36;
-  border-top: 2px solid #205996;
-  border-left: 2px solid #205996;
-  border-bottom: 2px solid #030d17;
-  border-right: 2px solid #030d17;
-  box-shadow: 
-    inset 1px 1px 0px rgba(255, 255, 255, 0.08),
-    0 8px 24px rgba(2, 6, 9, 0.65);
-  transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+/* Storybook Room Panels (from Image 2 dollhouse cross-section) */
+.room-bedroom {
+  background-color: #fedbe6;
+  border: 2.5px solid #232b28;
+  border-radius: 16px 240px 18px 230px / 235px 20px 245px 16px;
+  box-shadow: 4px 4px 0px #232b28;
 }
 
-.retro-card-sapphire:hover {
-  border-top-color: #60a5fa;
-  border-left-color: #38bdf8;
-  box-shadow: 
-    inset 1px 1px 0px rgba(255, 255, 255, 0.15),
-    0 12px 32px rgba(2, 6, 9, 0.85),
-    0 0 20px rgba(96, 165, 250, 0.15);
+.room-bathroom {
+  background-color: #fde4d7;
+  border: 2.5px solid #232b28;
+  border-radius: 240px 18px 235px 20px / 18px 240px 16px 235px;
+  box-shadow: 4px 4px 0px #232b28;
 }
 
-/* Sunken Inset Bay / Terminal Display Screen */
-.retro-inset {
-  background-color: #061622;
-  border-top: 2px solid #02070c;
-  border-left: 2px solid #02070c;
-  border-bottom: 2px solid #1a485d;
-  border-right: 2px solid #1a485d;
-  box-shadow: 
-    inset 2px 2px 6px rgba(0, 0, 0, 0.7),
-    inset -1px -1px 0px rgba(255, 255, 255, 0.04);
+.room-living {
+  background-color: #d8f1e9;
+  border: 2.5px solid #232b28;
+  border-radius: 235px 20px 245px 16px / 16px 240px 18px 230px;
+  box-shadow: 4px 4px 0px #232b28;
 }
 
-/* Tactile 3D Pre-Internet Buttons */
-.retro-btn-emerald {
-  background: linear-gradient(180deg, #187756 0%, #0e4c36 100%);
-  border-top: 2px solid #34d399;
-  border-left: 2px solid #34d399;
-  border-bottom: 2px solid #03130d;
-  border-right: 2px solid #03130d;
+.room-music {
+  background-color: #e9f0d4;
+  border: 2.5px solid #232b28;
+  border-radius: 18px 240px 16px 235px / 240px 18px 235px 20px;
+  box-shadow: 4px 4px 0px #232b28;
+}
+
+/* Scalloped Teal Roof Shingles (Image 2 motif) */
+.roof-scallops {
+  background-color: #1e7587;
+  background-image: radial-gradient(circle at 10px 0, transparent 0, transparent 8px, #2da1b8 8.5px, #2da1b8 10px, transparent 10.5px);
+  background-size: 20px 14px;
+}
+
+/* Hand-Drawn Tactile Buttons */
+.comic-btn-emerald {
+  background: #38a169;
+  border: 2.5px solid #232b28;
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
   color: #ffffff;
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    2px 2px 0px #020a07;
+  box-shadow: 3px 3px 0px #232b28;
   transition: all 0.15s ease-out;
+  font-weight: 800;
 }
 
-.retro-btn-emerald:hover {
-  background: linear-gradient(180deg, #1f946b 0%, #125e43 100%);
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    2px 2px 0px #020a07,
-    0 0 16px rgba(52, 211, 153, 0.3);
+.comic-btn-emerald:hover {
+  background: #2f855a;
+  box-shadow: 4px 4px 0px #232b28;
 }
 
-.retro-btn-emerald:active {
+.comic-btn-emerald:active {
   transform: translate(2px, 2px);
-  box-shadow: 
-    inset 2px 2px 4px rgba(0, 0, 0, 0.6),
-    0 0 0 transparent;
+  box-shadow: 1px 1px 0px #232b28;
 }
 
-.retro-btn-petrol {
-  background: linear-gradient(180deg, #1a5676 0%, #0f3950 100%);
-  border-top: 2px solid #38bdf8;
-  border-left: 2px solid #38bdf8;
-  border-bottom: 2px solid #040e15;
-  border-right: 2px solid #040e15;
+.comic-btn-teal {
+  background: #1e7587;
+  border: 2.5px solid #232b28;
+  border-radius: 15px 255px 15px 225px / 225px 15px 255px 15px;
   color: #ffffff;
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.25),
-    2px 2px 0px #02070a;
+  box-shadow: 3px 3px 0px #232b28;
   transition: all 0.15s ease-out;
+  font-weight: 800;
 }
 
-.retro-btn-petrol:hover {
-  background: linear-gradient(180deg, #216a91 0%, #134663 100%);
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.35),
-    2px 2px 0px #02070a,
-    0 0 16px rgba(56, 189, 248, 0.3);
+.comic-btn-teal:hover {
+  background: #185f6e;
+  box-shadow: 4px 4px 0px #232b28;
 }
 
-.retro-btn-petrol:active {
+.comic-btn-teal:active {
   transform: translate(2px, 2px);
-  box-shadow: 
-    inset 2px 2px 4px rgba(0, 0, 0, 0.6),
-    0 0 0 transparent;
+  box-shadow: 1px 1px 0px #232b28;
 }
 
-.retro-btn-muted {
-  background: linear-gradient(180deg, #102938 0%, #0a1b25 100%);
-  border-top: 2px solid #225a74;
-  border-left: 2px solid #225a74;
-  border-bottom: 2px solid #03090e;
-  border-right: 2px solid #03090e;
-  color: #c7e6dc;
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    2px 2px 0px #02070a;
-  transition: all 0.15s ease-out;
-}
-
-.retro-btn-muted:hover {
-  background: linear-gradient(180deg, #153549 0%, #0d2330 100%);
+.comic-btn-pink {
+  background: #e8638b;
+  border: 2.5px solid #232b28;
+  border-radius: 255px 15px 225px 15px / 15px 225px 15px 255px;
   color: #ffffff;
-  border-top-color: #2dd4bf;
-  border-left-color: #2dd4bf;
+  box-shadow: 3px 3px 0px #232b28;
+  transition: all 0.15s ease-out;
+  font-weight: 800;
 }
 
-.retro-btn-muted:active {
+.comic-btn-pink:hover {
+  background: #d44e76;
+  box-shadow: 4px 4px 0px #232b28;
+}
+
+.comic-btn-pink:active {
   transform: translate(2px, 2px);
-  box-shadow: 
-    inset 2px 2px 4px rgba(0, 0, 0, 0.6),
-    0 0 0 transparent;
+  box-shadow: 1px 1px 0px #232b28;
 }
 
-/* Retro Stamped Badges */
-.retro-stamp {
+.comic-btn-cream {
+  background: #faf5e8;
+  border: 2px solid #232b28;
+  border-radius: 18px 230px 16px 240px / 240px 16px 230px 18px;
+  color: #232b28;
+  box-shadow: 3px 3px 0px #232b28;
+  transition: all 0.15s ease-out;
+  font-weight: 800;
+}
+
+.comic-btn-cream:hover {
+  background: #f4ecda;
+  box-shadow: 4px 4px 0px #232b28;
+}
+
+.comic-btn-cream:active {
+  transform: translate(2px, 2px);
+  box-shadow: 1px 1px 0px #232b28;
+}
+
+/* Hand-Inked Storybook Inset Bay */
+.comic-inset {
+  background-color: #faf6ea;
+  border: 2px solid #232b28;
+  border-radius: 240px 18px 235px 20px / 18px 240px 16px 235px;
+  box-shadow: inset 2px 2px 0px rgba(35, 43, 40, 0.15);
+}
+
+/* Sleeping Smiling Cloud Badge (from Image 1) */
+.cloud-bubble {
+  background: #ffffff;
+  border: 2px solid #232b28;
+  border-radius: 50px;
+  box-shadow: 3px 3px 0px #232b28;
+  position: relative;
+}
+
+/* Storybook Stamp */
+.storybook-stamp {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 3px 8px;
-  text-transform: uppercase;
-  font-family: 'Inter', monospace;
-  font-weight: 800;
-  letter-spacing: 0.75px;
-  border-width: 2px;
-  border-style: solid;
-  border-radius: 4px;
-  white-space: nowrap;
-  line-height: 1.15;
-  user-select: none;
+  font-family: 'Inter', sans-serif;
+  font-weight: 900;
+  border: 2px dashed #232b28;
+  border-radius: 8px;
+  letter-spacing: 0.5px;
+  transform: rotate(-1.5deg);
 }
 
-.retro-stamp-cyan {
-  color: #22d3ee;
-  border-color: #22d3ee;
-  background-color: rgba(34, 211, 238, 0.12);
-  box-shadow: 0 0 8px rgba(34, 211, 238, 0.25);
-}
-
-.retro-stamp-emerald {
-  color: #34d399;
-  border-color: #34d399;
-  background-color: rgba(52, 211, 153, 0.12);
-  box-shadow: 0 0 8px rgba(52, 211, 153, 0.25);
-}
-
-.retro-stamp-amber {
-  color: #fbbf24;
-  border-color: #fbbf24;
-  background-color: rgba(251, 191, 36, 0.12);
-  box-shadow: 0 0 8px rgba(251, 191, 36, 0.25);
-}
-
-/* Authentic Pre-Internet Field Ledger Carbon Receipt */
+/* Authentic Paper Carbon Slip */
 .carbon-receipt {
-  background-color: #f7fbf9;
-  color: #071922;
-  box-shadow: 
-    inset 0 0 30px rgba(16, 75, 62, 0.08),
-    0 12px 35px rgba(0, 0, 0, 0.7);
+  background-color: #fefdfa;
+  background-image: 
+    linear-gradient(rgba(35, 43, 40, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(35, 43, 40, 0.03) 1px, transparent 1px);
+  background-size: 16px 16px;
+  border: 3px solid #232b28;
+  border-radius: 255px 18px 225px 22px / 20px 225px 18px 255px;
+  box-shadow: 8px 8px 0px #232b28;
 }
 
-/* Leaflet Dark Map filter for rich teal & deep green */
+/* Leaflet Map with Storybook Paper Tint */
 .leaflet-container {
-  filter: invert(100%) hue-rotate(185deg) brightness(85%) contrast(115%) saturate(130%) !important;
-  background: #061622 !important;
-  border: 2px solid #1a4d63 !important;
+  filter: contrast(105%) saturate(120%) !important;
+  background: #d8f1e9 !important;
+  border: 2.5px solid #232b28 !important;
+  border-radius: 12px;
 }
 
-/* Custom Scrollbar for rich petrol theme */
+/* Smooth Scrolling */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #05121a;
-  border: 1px solid #102938;
+  background: #fceaf1;
+  border-left: 2px solid #232b28;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #194e68;
-  border: 1px solid #236583;
-  border-radius: 2px;
+  background: #1e7587;
+  border: 2px solid #232b28;
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #236583;
+  background: #185f6e;
 }
 
-/* Clear word breaking across all UI containers */
 * {
   overflow-wrap: break-word;
 }

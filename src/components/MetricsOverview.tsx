@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLanguage } from '../context/LanguageContext';
-import { Users, Calendar, Banknote } from 'lucide-react';
+import { Users, Calendar, Banknote, Sparkles } from 'lucide-react';
 
 interface MetricsOverviewProps {
   activeLaborers: number;
@@ -17,93 +17,93 @@ export const MetricsOverview: React.FC<MetricsOverviewProps> = ({
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
-      {/* Metric 1: Workers (Sapphire Blue Card) */}
-      <div className="retro-card-sapphire rounded-xl p-4 sm:p-5 flex flex-col justify-between group cursor-default">
-        <div className="flex items-center justify-between gap-2 border-b border-[#1b436c] pb-2.5 mb-2">
+      {/* Room 1: Laborers Enrolled (Dusky Pink Bedroom & Library Motif) */}
+      <div className="room-bedroom p-4 sm:p-5 flex flex-col justify-between group cursor-default transition-all duration-200 hover:-translate-y-1">
+        <div className="flex items-center justify-between gap-2 border-b-2 border-[#232b28]/25 pb-2.5 mb-2">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-md bg-[#0d2a4a] border border-[#2563a0] text-[#60a5fa]">
+            <div className="p-1.5 rounded-lg bg-white border-2 border-[#232b28] text-[#1e7587] shadow-[2px_2px_0px_#232b28]">
               <Users className="w-4 h-4" />
             </div>
-            <span className="text-xs font-black uppercase text-[#93c5fd] tracking-wider">
+            <span className="text-xs font-black uppercase text-[#232b28] tracking-wider">
               {t.tab1Title}
             </span>
           </div>
-          <span className="bg-[#0b2440] text-[#60a5fa] px-2 py-0.5 rounded border border-[#1d4f82] text-[11px] font-extrabold tracking-wide">
+          <span className="bg-white text-[#e8638b] px-2.5 py-0.5 rounded-full border-2 border-[#232b28] text-[11px] font-black shadow-[1px_1px_0px_#232b28]">
             {t.tab1Badge}
           </span>
         </div>
 
-        <div className="text-3xl sm:text-4xl font-black text-[#edf8f5] group-hover:text-[#60a5fa] transition-colors duration-300 my-1 font-mono tracking-tight drop-shadow-md">
+        <div className="text-3xl sm:text-4xl font-black text-[#232b28] my-1 font-mono tracking-tight drop-shadow-sm">
           {String(activeLaborers).padStart(2, '0')}
         </div>
 
-        <div className="text-xs text-[#a5c7eb] font-medium leading-relaxed">
+        <div className="text-xs text-[#52323f] font-semibold leading-relaxed">
           {t.tab1Desc}
         </div>
 
-        <div className="mt-3 pt-2.5 border-t border-[#1b436c] text-xs font-bold text-[#60a5fa] flex items-center justify-between">
+        <div className="mt-3 pt-2 border-t-2 border-dashed border-[#232b28]/25 text-xs font-black text-[#1e7587] flex items-center justify-between">
           <span>{t.tab1Foot}</span>
-          <span className="text-[10px] text-[#558fcb] uppercase font-mono tracking-wider">SECURE</span>
+          <span className="text-[10px] text-[#232b28] bg-white px-1.5 py-0.5 rounded border border-[#232b28] font-mono">ROOM 01</span>
         </div>
       </div>
 
-      {/* Metric 2: Days Worked (Deep Emerald Algae Green Card) */}
-      <div className="retro-card-algae rounded-xl p-4 sm:p-5 flex flex-col justify-between group cursor-default">
-        <div className="flex items-center justify-between gap-2 border-b border-[#165640] pb-2.5 mb-2">
+      {/* Room 2: Days Worked (Mint Green Living Room Motif) */}
+      <div className="room-living p-4 sm:p-5 flex flex-col justify-between group cursor-default transition-all duration-200 hover:-translate-y-1">
+        <div className="flex items-center justify-between gap-2 border-b-2 border-[#232b28]/25 pb-2.5 mb-2">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-md bg-[#0a3528] border border-[#1b7a5a] text-[#34d399]">
+            <div className="p-1.5 rounded-lg bg-white border-2 border-[#232b28] text-[#2f855a] shadow-[2px_2px_0px_#232b28]">
               <Calendar className="w-4 h-4" />
             </div>
-            <span className="text-xs font-black uppercase text-[#6ee7b7] tracking-wider">
+            <span className="text-xs font-black uppercase text-[#232b28] tracking-wider">
               {t.tab2Title}
             </span>
           </div>
-          <span className="bg-[#082b20] text-[#34d399] px-2 py-0.5 rounded border border-[#166348] text-[11px] font-extrabold tracking-wide">
+          <span className="bg-white text-[#2f855a] px-2.5 py-0.5 rounded-full border-2 border-[#232b28] text-[11px] font-black shadow-[1px_1px_0px_#232b28]">
             {t.tab2Badge}
           </span>
         </div>
 
-        <div className="text-3xl sm:text-4xl font-black text-[#34d399] group-hover:text-[#4ade80] transition-colors duration-300 my-1 font-mono tracking-tight drop-shadow-md">
+        <div className="text-3xl sm:text-4xl font-black text-[#232b28] my-1 font-mono tracking-tight drop-shadow-sm">
           {String(totalDays).padStart(3, '0')}
         </div>
 
-        <div className="text-xs text-[#9fd5be] font-medium leading-relaxed">
+        <div className="text-xs text-[#2c473c] font-semibold leading-relaxed">
           {t.tab2Desc}
         </div>
 
-        <div className="mt-3 pt-2.5 border-t border-[#165640] text-xs font-bold text-[#34d399] flex items-center justify-between">
+        <div className="mt-3 pt-2 border-t-2 border-dashed border-[#232b28]/25 text-xs font-black text-[#2f855a] flex items-center justify-between">
           <span>{t.tab2Foot}</span>
-          <span className="text-[10px] text-[#2ba378] uppercase font-mono tracking-wider">MUSTERED</span>
+          <span className="text-[10px] text-[#232b28] bg-white px-1.5 py-0.5 rounded border border-[#232b28] font-mono">ROOM 02</span>
         </div>
       </div>
 
-      {/* Metric 3: Total Money Guaranteed (Rich Petrol Teal Card) */}
-      <div className="retro-card rounded-xl p-4 sm:p-5 flex flex-col justify-between group cursor-default">
-        <div className="flex items-center justify-between gap-2 border-b border-[#18495f] pb-2.5 mb-2">
+      {/* Room 3: Total Money Guaranteed (Warm Peach Treasury Room Motif) */}
+      <div className="room-bathroom p-4 sm:p-5 flex flex-col justify-between group cursor-default transition-all duration-200 hover:-translate-y-1">
+        <div className="flex items-center justify-between gap-2 border-b-2 border-[#232b28]/25 pb-2.5 mb-2">
           <div className="flex items-center gap-2">
-            <div className="p-1.5 rounded-md bg-[#082230] border border-[#206786] text-[#22d3ee]">
+            <div className="p-1.5 rounded-lg bg-white border-2 border-[#232b28] text-[#d97706] shadow-[2px_2px_0px_#232b28]">
               <Banknote className="w-4 h-4" />
             </div>
-            <span className="text-xs font-black uppercase text-[#67e8f9] tracking-wider">
+            <span className="text-xs font-black uppercase text-[#232b28] tracking-wider">
               {t.tab3Title}
             </span>
           </div>
-          <span className="bg-[#061d2a] text-[#22d3ee] px-2 py-0.5 rounded border border-[#1c556f] text-[11px] font-extrabold tracking-wide">
+          <span className="bg-white text-[#d97706] px-2.5 py-0.5 rounded-full border-2 border-[#232b28] text-[11px] font-black shadow-[1px_1px_0px_#232b28]">
             {t.tab3Badge}
           </span>
         </div>
 
-        <div className="text-3xl sm:text-4xl font-black text-[#22d3ee] group-hover:text-[#38bdf8] transition-colors duration-300 my-1 font-mono tracking-tight drop-shadow-md">
+        <div className="text-3xl sm:text-4xl font-black text-[#232b28] my-1 font-mono tracking-tight drop-shadow-sm">
           ₹{totalCapital.toLocaleString('en-IN')}
         </div>
 
-        <div className="text-xs text-[#9ecad4] font-medium leading-relaxed">
+        <div className="text-xs text-[#523e2d] font-semibold leading-relaxed">
           {t.tab3Desc}
         </div>
 
-        <div className="mt-3 pt-2.5 border-t border-[#18495f] text-xs font-bold text-[#22d3ee] flex items-center justify-between">
+        <div className="mt-3 pt-2 border-t-2 border-dashed border-[#232b28]/25 text-xs font-black text-[#d97706] flex items-center justify-between">
           <span>{t.tab3Foot}</span>
-          <span className="text-[10px] text-[#20839e] uppercase font-mono tracking-wider">STATUTORY</span>
+          <span className="text-[10px] text-[#232b28] bg-white px-1.5 py-0.5 rounded border border-[#232b28] font-mono">ROOM 03</span>
         </div>
       </div>
     </div>

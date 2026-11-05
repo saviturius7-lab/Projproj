@@ -174,23 +174,23 @@ export const FieldTelegraphStation: React.FC<FieldTelegraphStationProps> = ({
   };
 
   return (
-    <div className="retro-card rounded-xl p-4 sm:p-6 mb-6 relative overflow-hidden">
+    <div className="comic-card rounded-2xl p-4 sm:p-6 mb-6 overflow-hidden">
       {/* Station Title */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-[#1b4b60] pb-3 mb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b-2 border-[#232b28]/25 pb-3.5 mb-5">
         <div>
-          <h2 className="text-xl sm:text-2xl font-black text-[#edf8f5] flex items-center gap-2.5">
+          <h2 className="text-xl sm:text-2xl font-black text-[#232b28] flex items-center gap-2.5">
             <span>{t.teletypeStationTitle}</span>
-            <span className="retro-stamp-emerald text-[11px] font-extrabold px-2.5 py-0.5 rounded">
+            <span className="bg-[#38a169] text-white text-[11px] font-black px-2.5 py-0.5 rounded-full border-2 border-[#232b28] shadow-[1px_1px_0px_#232b28]">
               {t.preAiBadge}
             </span>
           </h2>
-          <p className="text-sm text-[#93c3b7] mt-0.5 font-medium">
+          <p className="text-sm text-[#4d5e46] mt-0.5 font-semibold">
             {t.teletypeStationSubtitle}
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs font-bold text-[#34d399] bg-[#071f1a] px-3 py-1.5 rounded-lg border border-[#17664b] shadow-inner">
-          <span className="w-2 h-2 rounded-full bg-[#10b981] animate-pulse"></span>
+        <div className="flex items-center gap-2 text-xs font-black text-[#232b28] bg-[#fde4d7] px-3.5 py-1.5 rounded-[15px_225px_15px_255px/255px_15px_225px_15px] border-2 border-[#232b28] shadow-[2px_2px_0px_#232b28]">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#38a169] border border-[#232b28] animate-ping" />
           <span>✓ Guaranteed ₹600.00 / Day</span>
         </div>
       </div>
@@ -200,13 +200,13 @@ export const FieldTelegraphStation: React.FC<FieldTelegraphStationProps> = ({
         {/* Left Column: Quick 3-Step Punch (7 cols) */}
         <div className="lg:col-span-7 space-y-4">
           {/* Step 1: Worker Phone */}
-          <div className="retro-inset rounded-xl p-4">
-            <label className="text-xs sm:text-sm font-extrabold text-[#edf8f5] flex items-center justify-between mb-2">
+          <div className="comic-inset rounded-2xl p-4">
+            <label className="text-xs sm:text-sm font-black text-[#232b28] flex items-center justify-between mb-2">
               <span className="flex items-center gap-2">
-                <Phone className="w-4 h-4 text-[#22d3ee]" />
+                <Phone className="w-4 h-4 text-[#1e7587]" />
                 1. Worker Phone Number (मजदूर का फोन नंबर):
               </span>
-              <span className="text-xs text-[#34d399] font-bold bg-[#07241b] px-2 py-0.5 rounded border border-[#165640]">
+              <span className="text-xs text-[#232b28] font-black bg-[#fedbe6] px-2 py-0.5 rounded border-2 border-[#232b28]">
                 Step 1
               </span>
             </label>
@@ -217,17 +217,17 @@ export const FieldTelegraphStation: React.FC<FieldTelegraphStationProps> = ({
                 value={workerPhone}
                 onChange={(e) => setWorkerPhone(e.target.value)}
                 placeholder="+91..."
-                className="w-full px-3 py-2 bg-[#091e2b] border-2 border-[#1c4b60] rounded-lg font-mono font-bold text-sm text-[#edf8f5] focus:outline-none focus:ring-2 focus:ring-[#22d3ee] transition-all"
+                className="w-full px-3 py-2 bg-white border-2 border-[#232b28] rounded-xl font-mono font-bold text-sm text-[#232b28] focus:outline-none shadow-[2px_2px_0px_#232b28]"
               />
 
               <select
                 value={workerPhone}
                 onChange={(e) => setWorkerPhone(e.target.value)}
-                className="w-full px-2.5 py-2 bg-[#091e2b] border border-[#1c4b60] rounded-lg font-medium text-xs sm:text-sm text-[#edf8f5] focus:outline-none focus:ring-2 focus:ring-[#22d3ee] transition-all cursor-pointer"
+                className="w-full px-2.5 py-2 bg-white border-2 border-[#232b28] rounded-xl font-bold text-xs sm:text-sm text-[#232b28] focus:outline-none shadow-[2px_2px_0px_#232b28] cursor-pointer"
               >
                 <option value={workerPhone}>{workerPhone} (Active)</option>
                 {workers.filter((w) => w !== workerPhone).map((phone) => (
-                  <option key={phone} value={phone} className="bg-[#091e2b] text-[#edf8f5]">
+                  <option key={phone} value={phone} className="bg-white text-[#232b28]">
                     {phone}
                   </option>
                 ))}
@@ -236,13 +236,13 @@ export const FieldTelegraphStation: React.FC<FieldTelegraphStationProps> = ({
           </div>
 
           {/* Step 2: Work Location */}
-          <div className="retro-inset rounded-xl p-4">
-            <label className="text-xs sm:text-sm font-extrabold text-[#edf8f5] flex items-center justify-between mb-2">
+          <div className="comic-inset rounded-2xl p-4">
+            <label className="text-xs sm:text-sm font-black text-[#232b28] flex items-center justify-between mb-2">
               <span className="flex items-center gap-2">
-                <Building2 className="w-4 h-4 text-[#34d399]" />
+                <Building2 className="w-4 h-4 text-[#38a169]" />
                 2. Work Location (काम की जगह):
               </span>
-              <span className="text-xs text-[#34d399] font-bold bg-[#07241b] px-2 py-0.5 rounded border border-[#165640]">
+              <span className="text-xs text-[#232b28] font-black bg-[#d8f1e9] px-2 py-0.5 rounded border-2 border-[#232b28]">
                 Step 2
               </span>
             </label>
@@ -251,10 +251,10 @@ export const FieldTelegraphStation: React.FC<FieldTelegraphStationProps> = ({
               <select
                 value={selectedHubIdx}
                 onChange={(e) => setSelectedHubIdx(Number(e.target.value))}
-                className="flex-1 px-3 py-2 bg-[#091e2b] border-2 border-[#1c4b60] rounded-lg font-bold text-xs sm:text-sm text-[#edf8f5] focus:outline-none focus:ring-2 focus:ring-[#22d3ee] transition-all cursor-pointer"
+                className="flex-1 px-3 py-2 bg-white border-2 border-[#232b28] rounded-xl font-black text-xs sm:text-sm text-[#232b28] focus:outline-none shadow-[2px_2px_0px_#232b28] cursor-pointer"
               >
                 {POPULAR_HUBS.map((hub, idx) => (
-                  <option key={hub.name} value={idx} className="bg-[#091e2b] text-[#edf8f5]">
+                  <option key={hub.name} value={idx} className="bg-white text-[#232b28]">
                     📍 {hub.name}
                   </option>
                 ))}
@@ -264,9 +264,9 @@ export const FieldTelegraphStation: React.FC<FieldTelegraphStationProps> = ({
                 type="button"
                 onClick={handleUseDeviceGps}
                 disabled={isLocating || isSubmitting}
-                className="retro-btn-muted px-4 py-2 text-xs sm:text-sm font-extrabold rounded-lg flex items-center justify-center gap-2 shrink-0 cursor-pointer active:scale-95"
+                className="comic-btn-cream px-4 py-2 text-xs sm:text-sm font-black flex items-center justify-center gap-2 shrink-0 cursor-pointer active:scale-95"
               >
-                <MapPin className={`w-4 h-4 ${isLocating ? 'animate-bounce text-[#22d3ee]' : 'text-[#22d3ee]'}`} />
+                <MapPin className={`w-4 h-4 ${isLocating ? 'animate-bounce text-[#e8638b]' : 'text-[#e8638b]'}`} />
                 <span>{isLocating ? 'Locating...' : 'Use My GPS'}</span>
               </button>
             </div>
@@ -278,19 +278,19 @@ export const FieldTelegraphStation: React.FC<FieldTelegraphStationProps> = ({
               type="button"
               onClick={handlePunchAttendance}
               disabled={isSubmitting}
-              className="retro-btn-emerald w-full py-4 px-6 rounded-xl text-base sm:text-lg font-black tracking-wide flex items-center justify-center gap-3 cursor-pointer shadow-lg active:scale-98"
+              className="comic-btn-emerald w-full py-4 px-6 text-base sm:text-lg font-black tracking-wide flex items-center justify-center gap-3 cursor-pointer"
             >
-              <CheckCircle2 className="w-6 h-6 text-[#7ff0cb] shrink-0 animate-pulse" />
+              <CheckCircle2 className="w-6 h-6 text-white shrink-0" />
               <span>📌 MARK TODAY'S ATTENDANCE • ₹600 (हाजिरी लगाएं)</span>
             </button>
-            <p className="text-xs text-center text-[#8ebfb4] mt-2 font-medium">
+            <p className="text-xs text-center text-[#55694a] mt-2 font-bold">
               1 tap locks ₹600 daily wage into official government record. Cannot be cut or denied by contractor.
             </p>
           </div>
 
           {/* Quick Helpful Buttons for Hisaab, Complaint, Rules, Help */}
-          <div className="pt-2">
-            <span className="text-xs font-black text-[#8ebfb4] block mb-2 uppercase tracking-wider">
+          <div className="pt-1">
+            <span className="text-xs font-black text-[#232b28] block mb-2 uppercase tracking-wider">
               Quick Helpful Services:
             </span>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 text-xs font-bold">
@@ -298,54 +298,54 @@ export const FieldTelegraphStation: React.FC<FieldTelegraphStationProps> = ({
                 type="button"
                 onClick={() => handleSendMessage('Hisaab')}
                 disabled={isSubmitting}
-                className="retro-btn-muted p-3 rounded-lg text-left flex flex-col justify-between cursor-pointer active:scale-95 group"
+                className="comic-btn-cream p-3 rounded-xl text-left flex flex-col justify-between cursor-pointer active:scale-95 group"
               >
-                <span className="text-[#38bdf8] text-sm font-black group-hover:text-[#70c4ec]">📊 Check Hisaab</span>
-                <span className="text-[11px] text-[#86b5aa] mt-1 font-medium">See Total Earnings</span>
+                <span className="text-[#1e7587] text-sm font-black">📊 Check Hisaab</span>
+                <span className="text-[11px] text-[#55694a] mt-1 font-semibold">See Total Earnings</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSendMessage('Shikayat')}
                 disabled={isSubmitting}
-                className="retro-btn-muted p-3 rounded-lg text-left flex flex-col justify-between cursor-pointer active:scale-95 group"
+                className="comic-btn-cream p-3 rounded-xl text-left flex flex-col justify-between cursor-pointer active:scale-95 group"
               >
-                <span className="text-[#22d3ee] text-sm font-black group-hover:text-[#67e8f9]">🚨 File Complaint</span>
-                <span className="text-[11px] text-[#86b5aa] mt-1 font-medium">Report Unpaid Wage</span>
+                <span className="text-[#e8638b] text-sm font-black">🚨 File Complaint</span>
+                <span className="text-[11px] text-[#55694a] mt-1 font-semibold">Report Unpaid Wage</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSendMessage('Rate')}
                 disabled={isSubmitting}
-                className="retro-btn-muted p-3 rounded-lg text-left flex flex-col justify-between cursor-pointer active:scale-95 group"
+                className="comic-btn-cream p-3 rounded-xl text-left flex flex-col justify-between cursor-pointer active:scale-95 group"
               >
-                <span className="text-[#34d399] text-sm font-black group-hover:text-[#6ee7b7]">📜 Wage Rules</span>
-                <span className="text-[11px] text-[#86b5aa] mt-1 font-medium">₹600 Legal Rate</span>
+                <span className="text-[#38a169] text-sm font-black">📜 Wage Rules</span>
+                <span className="text-[11px] text-[#55694a] mt-1 font-semibold">₹600 Legal Rate</span>
               </button>
 
               <button
                 type="button"
                 onClick={() => handleSendMessage('Help')}
                 disabled={isSubmitting}
-                className="retro-btn-muted p-3 rounded-lg text-left flex flex-col justify-between cursor-pointer active:scale-95 group"
+                className="comic-btn-cream p-3 rounded-xl text-left flex flex-col justify-between cursor-pointer active:scale-95 group"
               >
-                <span className="text-[#fbbf24] text-sm font-black group-hover:text-[#fde68a]">📞 Free Help</span>
-                <span className="text-[11px] text-[#86b5aa] mt-1 font-medium">Labour Helpline</span>
+                <span className="text-[#d97706] text-sm font-black">📞 Free Help</span>
+                <span className="text-[11px] text-[#55694a] mt-1 font-semibold">Labour Helpline</span>
               </button>
             </div>
           </div>
         </div>
 
         {/* Right Column: Live Work Slip & Message Output (5 cols) */}
-        <div className="lg:col-span-5 retro-inset rounded-xl p-4 flex flex-col justify-between h-[490px]">
+        <div className="lg:col-span-5 comic-inset rounded-2xl p-4 flex flex-col justify-between h-[490px] bg-[#fcf8ec]">
           {/* Header */}
-          <div className="flex items-center justify-between border-b border-[#1b485d] pb-2.5 mb-2.5">
-            <span className="text-xs font-black text-[#edf8f5] flex items-center gap-2 uppercase tracking-wide">
-              <Printer className="w-4 h-4 text-[#22d3ee]" />
+          <div className="flex items-center justify-between border-b-2 border-[#232b28]/20 pb-2.5 mb-2.5">
+            <span className="text-xs font-black text-[#232b28] flex items-center gap-2 uppercase tracking-wide">
+              <Printer className="w-4 h-4 text-[#1e7587]" />
               Official Attendance Log &amp; Slip
             </span>
-            <span className="text-[11px] font-extrabold text-[#34d399] bg-[#07241b] px-2.5 py-0.5 rounded border border-[#165640]">
+            <span className="text-[11px] font-black text-[#232b28] bg-[#d8f1e9] px-2.5 py-0.5 rounded-full border border-[#232b28]">
               ● LIVE RECEIPT
             </span>
           </div>
@@ -355,35 +355,35 @@ export const FieldTelegraphStation: React.FC<FieldTelegraphStationProps> = ({
             {messages.map((m) => (
               <div
                 key={m.id}
-                className={`p-3.5 rounded-xl border leading-relaxed transition-all duration-200 ${
+                className={`p-3.5 rounded-2xl border-2 border-[#232b28] leading-relaxed shadow-[2px_2px_0px_#232b28] transition-all ${
                   m.sender === 'WORKER'
-                    ? 'bg-[#082230] border-[#1d4d62] text-[#edf8f5]'
-                    : 'bg-[#06241b] border-[#165842] text-[#edf8f5] shadow-md'
+                    ? 'bg-[#fedbe6] text-[#232b28]'
+                    : 'bg-[#ffffff] text-[#232b28]'
                 }`}
               >
-                <div className="flex items-center justify-between text-[11px] font-bold border-b border-white/10 pb-1 mb-2 text-[#8cbab0]">
+                <div className="flex items-center justify-between text-[11px] font-black border-b border-[#232b28]/20 pb-1 mb-2 text-[#4d5e46]">
                   <span className="font-mono">
-                    {m.sender === 'WORKER' ? `Worker: ${workerPhone}` : 'Shramik Sakshi Official Desk'}
+                    {m.sender === 'WORKER' ? `Worker: ${workerPhone}` : 'Shramik Sakshi Desk'}
                   </span>
-                  <span className="font-mono text-[#22d3ee]">{m.timestamp.slice(11, 19)}</span>
+                  <span className="font-mono text-[#1e7587]">{m.timestamp.slice(11, 19)}</span>
                 </div>
 
-                <div className="whitespace-pre-wrap font-sans text-xs sm:text-sm leading-relaxed">
+                <div className="whitespace-pre-wrap font-sans text-xs sm:text-sm leading-relaxed font-semibold">
                   {m.text}
                 </div>
 
                 {/* Instant View Slip Button */}
                 {m.log && (
-                  <div className="mt-3 pt-2.5 border-t border-dashed border-[#1f5643] flex flex-wrap items-center justify-between gap-2">
-                    <span className="text-xs font-mono font-bold text-[#34d399]">
+                  <div className="mt-3 pt-2.5 border-t-2 border-dashed border-[#232b28]/30 flex flex-wrap items-center justify-between gap-2">
+                    <span className="text-xs font-mono font-black text-[#1e7587]">
                       Slip: {m.log.verification_token}
                     </span>
                     <button
                       type="button"
                       onClick={() => onOpenReceipt(m.log!)}
-                      className="retro-btn-petrol px-3.5 py-1.5 rounded-lg text-xs font-extrabold flex items-center gap-1.5 cursor-pointer active:scale-95"
+                      className="comic-btn-pink px-3.5 py-1.5 text-xs font-black flex items-center gap-1.5 cursor-pointer active:scale-95"
                     >
-                      <FileText className="w-3.5 h-3.5 text-[#22d3ee]" />
+                      <FileText className="w-3.5 h-3.5" />
                       <span>VIEW OFFICIAL SLIP (पर्ची देखें)</span>
                     </button>
                   </div>
@@ -399,19 +399,19 @@ export const FieldTelegraphStation: React.FC<FieldTelegraphStationProps> = ({
               e.preventDefault();
               if (customText.trim()) handleSendMessage(customText.trim());
             }}
-            className="mt-3 pt-2.5 border-t border-[#1b485d] flex items-center gap-2"
+            className="mt-3 pt-2.5 border-t-2 border-[#232b28]/20 flex items-center gap-2"
           >
             <input
               type="text"
               placeholder="Type: '2' for Hisaab, '3' for Complaint..."
               value={customText}
               onChange={(e) => setCustomText(e.target.value)}
-              className="flex-1 min-w-0 px-3 py-2 bg-[#081b27] border border-[#1d4d62] rounded-lg text-xs sm:text-sm text-[#edf8f5] placeholder-[#679187] focus:outline-none focus:ring-2 focus:ring-[#22d3ee]"
+              className="flex-1 min-w-0 px-3 py-2 bg-white border-2 border-[#232b28] rounded-xl text-xs sm:text-sm text-[#232b28] placeholder-[#7d8f78] focus:outline-none shadow-[2px_2px_0px_#232b28]"
             />
             <button
               type="submit"
               disabled={isSubmitting || !customText.trim()}
-              className="retro-btn-emerald px-4 py-2 text-xs font-black rounded-lg flex items-center gap-1.5 shrink-0 cursor-pointer active:scale-95 disabled:opacity-50"
+              className="comic-btn-teal px-4 py-2 text-xs font-black flex items-center gap-1.5 shrink-0 cursor-pointer active:scale-95 disabled:opacity-50"
             >
               <Send className="w-3.5 h-3.5" />
               <span>SEND</span>

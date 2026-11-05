@@ -29,66 +29,66 @@ export const Sidebar: React.FC<SidebarProps> = ({
   };
 
   return (
-    <aside className="w-full lg:w-72 shrink-0 retro-card rounded-xl p-4 sm:p-5 space-y-4">
+    <aside className="w-full lg:w-72 shrink-0 comic-card-wobble-2 p-4 sm:p-5 space-y-4">
       {/* Sidebar Header */}
-      <div className="border-b border-[#1b485d] pb-2.5">
-        <h2 className="text-sm font-extrabold text-[#edf8f5] uppercase tracking-wider flex items-center gap-2">
-          <Users className="w-4 h-4 text-[#22d3ee] shrink-0" />
+      <div className="border-b-2 border-[#232b28]/20 pb-2.5">
+        <h2 className="text-sm font-black text-[#232b28] uppercase tracking-wider flex items-center gap-2">
+          <Users className="w-4 h-4 text-[#1e7587] shrink-0" />
           <span>{t.dossierSection}</span>
         </h2>
-        <p className="text-xs text-[#8abcb0] mt-0.5 font-medium">
+        <p className="text-xs text-[#55694a] mt-0.5 font-semibold">
           Select a worker to see their days and slips
         </p>
       </div>
 
       {/* Select Worker Filter */}
-      <div className="retro-inset rounded-lg p-3">
-        <label className="block text-xs font-bold text-[#edf8f5] mb-2 flex items-center justify-between">
+      <div className="comic-inset rounded-xl p-3">
+        <label className="block text-xs font-black text-[#232b28] mb-2 flex items-center justify-between">
           <span>{t.workerDossierSelect}</span>
-          <span className="text-[11px] bg-[#07241b] text-[#34d399] px-2 py-0.5 rounded font-bold border border-[#165640]">
+          <span className="text-[11px] bg-white text-[#1e7587] px-2 py-0.5 rounded-full font-black border-2 border-[#232b28]">
             {workers.length} {t.enrolledCount}
           </span>
         </label>
         <select
           value={selectedWorker}
           onChange={(e) => onSelectWorker(e.target.value)}
-          className="w-full px-2.5 py-2 bg-[#091e2b] border border-[#1d4d62] rounded-md text-xs sm:text-sm font-mono font-bold text-[#edf8f5] focus:outline-none focus:ring-2 focus:ring-[#22d3ee] cursor-pointer transition-all duration-200"
+          className="w-full px-2.5 py-2 bg-white border-2 border-[#232b28] rounded-xl text-xs sm:text-sm font-bold text-[#232b28] focus:outline-none cursor-pointer shadow-[2px_2px_0px_#232b28]"
         >
-          <option value="All Workers" className="bg-[#091e2b] text-[#edf8f5]">{t.allLaborersOption}</option>
+          <option value="All Workers" className="bg-white text-[#232b28]">{t.allLaborersOption}</option>
           {workers.map((phone) => (
-            <option key={phone} value={phone} className="bg-[#091e2b] text-[#edf8f5]">
+            <option key={phone} value={phone} className="bg-white text-[#232b28]">
               {phone}
             </option>
           ))}
         </select>
       </div>
 
-      {/* Primary Action Buttons with Tactile 3D Feel */}
+      {/* Primary Action Buttons with Tactile Feel */}
       <div className="space-y-2.5">
         <button
           onClick={onQuickCheckIn}
-          className="retro-btn-emerald w-full inline-flex items-center justify-center gap-2 px-3.5 py-2.5 rounded-lg font-black text-xs sm:text-sm cursor-pointer active:scale-95 shadow-md"
+          className="comic-btn-emerald w-full inline-flex items-center justify-center gap-2 px-3.5 py-2.5 text-xs sm:text-sm cursor-pointer active:scale-95 font-black"
         >
-          <MapPin className="w-4 h-4 text-[#7ff0cb] shrink-0" />
+          <MapPin className="w-4 h-4 text-white shrink-0" />
           <span>{t.dispatchGpsPinBtn}</span>
         </button>
 
         <button
           onClick={onOpenSimulator}
-          className="retro-btn-muted w-full inline-flex items-center justify-center gap-2 px-3.5 py-2 rounded-lg font-extrabold text-xs sm:text-sm cursor-pointer active:scale-95"
+          className="comic-btn-cream w-full inline-flex items-center justify-center gap-2 px-3.5 py-2 text-xs sm:text-sm cursor-pointer active:scale-95 font-black"
         >
-          <Radio className="w-4 h-4 text-[#22d3ee] shrink-0" />
+          <Radio className="w-4 h-4 text-[#e8638b] shrink-0" />
           <span>{t.telexConsoleBtn}</span>
         </button>
       </div>
 
-      {/* Simple How-it-Works Box */}
-      <div className="bg-[#06241b] border border-[#15664a] rounded-lg p-3 text-xs text-[#edf8f5]">
-        <div className="font-extrabold text-[#34d399] text-xs uppercase mb-1.5 flex items-center justify-between tracking-wide">
+      {/* Storybook Instructions Box */}
+      <div className="bg-[#e9f0d4] border-2 border-[#232b28] rounded-[18px_240px_16px_235px/240px_18px_235px_20px] p-3 text-xs text-[#232b28] shadow-[2px_2px_0px_#232b28]">
+        <div className="font-black text-[#5c6e2b] text-xs uppercase mb-1.5 flex items-center justify-between tracking-wide">
           <span>{t.regulationInstructions}</span>
-          <CheckCircle className="w-3.5 h-3.5 text-[#34d399]" />
+          <CheckCircle className="w-3.5 h-3.5 text-[#5c6e2b]" />
         </div>
-        <ol className="list-decimal list-inside space-y-1 text-xs text-[#9fc7bd] leading-relaxed font-medium">
+        <ol className="list-decimal list-inside space-y-1 text-xs text-[#3a4433] leading-relaxed font-semibold">
           <li>{t.instStep1}</li>
           <li>{t.instStep2}</li>
           <li>{t.instStep3}</li>
@@ -96,8 +96,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Direct Search by Phone */}
-      <form onSubmit={handleDirectLookup} className="pt-2 border-t border-[#1b485d]">
-        <label className="block text-xs font-bold text-[#22d3ee] mb-1.5">
+      <form onSubmit={handleDirectLookup} className="pt-2 border-t-2 border-[#232b28]/20">
+        <label className="block text-xs font-black text-[#1e7587] mb-1.5">
           {t.directWorkerChatLabel}
         </label>
         <div className="flex gap-1.5">
@@ -106,11 +106,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             placeholder="+91..."
             value={directPhone}
             onChange={(e) => setDirectPhone(e.target.value)}
-            className="flex-1 min-w-0 px-2.5 py-1.5 bg-[#081b27] border border-[#1c4b60] rounded-md text-xs sm:text-sm font-mono font-bold text-[#edf8f5] placeholder-[#679187] focus:outline-none focus:ring-1 focus:ring-[#22d3ee]"
+            className="flex-1 min-w-0 px-2.5 py-1.5 bg-white border-2 border-[#232b28] rounded-xl text-xs sm:text-sm font-mono font-bold text-[#232b28] placeholder-[#7d8f78] focus:outline-none shadow-[2px_2px_0px_#232b28]"
           />
           <button
             type="submit"
-            className="retro-btn-petrol px-3 py-1.5 text-xs font-bold rounded-md shrink-0 flex items-center gap-1 cursor-pointer active:scale-95"
+            className="comic-btn-pink px-3 py-1.5 text-xs font-black shrink-0 flex items-center gap-1 cursor-pointer active:scale-95"
           >
             <Search className="w-3 h-3" />
             <span>{t.chatBtn}</span>
@@ -119,10 +119,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </form>
 
       {/* Reset Records */}
-      <div className="pt-2 border-t border-[#1b485d]">
+      <div className="pt-2 border-t-2 border-dashed border-[#232b28]/20">
         <button
           onClick={onResetData}
-          className="w-full inline-flex items-center justify-center gap-1.5 py-1.5 text-xs text-[#70a194] hover:text-[#22d3ee] font-bold transition-colors cursor-pointer"
+          className="w-full inline-flex items-center justify-center gap-1.5 py-1.5 text-xs text-[#55694a] hover:text-[#1e7587] font-black transition-colors cursor-pointer"
         >
           <RotateCcw className="w-3.5 h-3.5 shrink-0" />
           <span>{t.resetArchivedBtn}</span>

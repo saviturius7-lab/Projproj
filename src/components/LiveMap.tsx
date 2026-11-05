@@ -55,9 +55,9 @@ export const LiveMap: React.FC<LiveMapProps> = ({ logs, selectedWorker, onOpenRe
         className: 'custom-vintage-pin',
         html: `
           <div style="
-            background: linear-gradient(135deg, #10b981 0%, #064e3b 100%);
+            background: #1e7587;
             color: #ffffff;
-            border: 2px solid #34d399;
+            border: 2.5px solid #232b28;
             border-radius: 50% 50% 50% 0;
             transform: rotate(-45deg);
             width: 32px;
@@ -65,7 +65,7 @@ export const LiveMap: React.FC<LiveMapProps> = ({ logs, selectedWorker, onOpenRe
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 12px rgba(52, 211, 153, 0.5);
+            box-shadow: 2px 2px 0px #232b28;
           ">
             <span style="transform: rotate(45deg); font-size: 13px;">📍</span>
           </div>
@@ -86,22 +86,22 @@ export const LiveMap: React.FC<LiveMapProps> = ({ logs, selectedWorker, onOpenRe
           const marker = L.marker([lat, lng], { icon: customIcon });
 
           const popupContent = `
-            <div style="font-family: 'Inter', sans-serif; min-width: 200px; padding: 4px; background: #0c2330; color: #edf8f5; border-radius: 6px;">
-              <div style="border-bottom: 2px solid #1c556f; padding-bottom: 4px; margin-bottom: 6px;">
-                <span style="font-size: 10px; color: #22d3ee; font-weight: bold; text-transform: uppercase;">
+            <div style="font-family: 'Inter', sans-serif; min-width: 200px; padding: 4px; background: #fffef9; color: #232b28; border-radius: 8px;">
+              <div style="border-bottom: 2px solid #232b28; padding-bottom: 4px; margin-bottom: 6px;">
+                <span style="font-size: 10px; color: #e8638b; font-weight: 900; text-transform: uppercase;">
                   WORK LOCATION PIN
                 </span>
-                <h4 style="font-weight: 800; margin: 2px 0 0 0; color: #edf8f5; font-size: 14px;">
+                <h4 style="font-weight: 900; margin: 2px 0 0 0; color: #232b28; font-size: 14px;">
                   ${log.location_name || 'Work Site'}
                 </h4>
               </div>
-              <p style="margin: 3px 0; font-size: 12px; color: #9fc7bd;">
-                <strong style="color: #edf8f5;">Worker:</strong> ${log.phone_number}
+              <p style="margin: 3px 0; font-size: 12px; color: #232b28;">
+                <strong>Worker:</strong> ${log.phone_number}
               </p>
-              <p style="margin: 3px 0; font-size: 12px; color: #34d399; font-weight: bold;">
+              <p style="margin: 3px 0; font-size: 12px; color: #2f855a; font-weight: 800;">
                 Daily Wage: ₹${log.estimated_wage.toFixed(2)}
               </p>
-              <span style="font-family: monospace; font-size: 11px; color: #22d3ee; font-weight: bold;">
+              <span style="font-family: monospace; font-size: 11px; color: #1e7587; font-weight: bold;">
                 ${log.verification_token}
               </span>
             </div>
@@ -123,28 +123,28 @@ export const LiveMap: React.FC<LiveMapProps> = ({ logs, selectedWorker, onOpenRe
   }, [logs, selectedWorker]);
 
   return (
-    <div className="retro-card rounded-xl p-4 sm:p-6 mb-6 shadow-xl">
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 border-b border-[#1b4b60] pb-3.5 mb-5">
+    <div className="comic-card rounded-2xl p-4 sm:p-6 mb-6 shadow-md">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2.5 border-b-2 border-[#232b28]/20 pb-3.5 mb-5">
         <div>
           <div className="flex items-center gap-2.5 mb-1.5">
-            <span className="retro-stamp-cyan text-[11px] font-extrabold px-2.5 py-0.5 rounded">
+            <span className="bg-[#1e7587] text-white border-2 border-[#232b28] text-[11px] font-black px-2.5 py-0.5 rounded-full shadow-[1px_1px_0px_#232b28]">
               {t.surveyPlotBadge}
             </span>
-            <span className="text-xs font-mono font-bold text-[#34d399]">
+            <span className="text-xs font-mono font-black text-[#2f855a]">
               {validLocations.length} {t.plottedStationsCount}
             </span>
           </div>
-          <h3 className="text-xl sm:text-2xl font-black text-[#edf8f5] flex items-center gap-2">
-            <Compass className="w-5 h-5 text-[#22d3ee] shrink-0" />
+          <h3 className="text-xl sm:text-2xl font-black text-[#232b28] flex items-center gap-2">
+            <Compass className="w-5 h-5 text-[#1e7587] shrink-0" />
             <span>{t.mapChartTitle}</span>
           </h3>
-          <p className="text-xs sm:text-sm text-[#93c3b7] mt-0.5 font-medium">
+          <p className="text-xs sm:text-sm text-[#55694a] mt-0.5 font-semibold">
             {t.mapChartSubtitle}
           </p>
         </div>
       </div>
 
-      <div className="retro-inset rounded-xl overflow-hidden shadow-inner">
+      <div className="comic-inset rounded-2xl overflow-hidden bg-white">
         <div
           ref={mapContainerRef}
           className="w-full h-80 sm:h-96 z-0"
@@ -152,32 +152,32 @@ export const LiveMap: React.FC<LiveMapProps> = ({ logs, selectedWorker, onOpenRe
         />
 
         {/* Map footer bar */}
-        <div className="bg-[#061824] border-t border-[#1b485d] p-3 px-4 text-xs sm:text-sm flex flex-wrap items-center justify-between gap-3 text-[#edf8f5]">
-          <div className="flex flex-wrap items-center gap-3 font-semibold text-[#8ebfb4]">
+        <div className="bg-[#faf5e8] border-t-2 border-[#232b28] p-3.5 px-4 text-xs sm:text-sm flex flex-wrap items-center justify-between gap-3 text-[#232b28]">
+          <div className="flex flex-wrap items-center gap-3 font-extrabold text-[#55694a]">
             <span className="flex items-center gap-1.5 shrink-0">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#10b981] animate-ping shrink-0"></span>
+              <span className="w-2.5 h-2.5 rounded-full bg-[#38a169] border border-[#232b28] animate-ping shrink-0"></span>
               <span>{t.activePinLabel}</span>
             </span>
-            <span className="hidden sm:inline text-[#1c4b60]">•</span>
-            <span className="text-[#22d3ee]">
+            <span className="hidden sm:inline text-[#232b28]/30">•</span>
+            <span className="text-[#1e7587]">
               {t.surveyScaleLabel}
             </span>
-            <span className="hidden sm:inline text-[#1c4b60]">•</span>
-            <span className="text-[#34d399] font-bold">
+            <span className="hidden sm:inline text-[#232b28]/30">•</span>
+            <span className="text-[#2f855a]">
               ✓ {t.gpsProtocolActive}
             </span>
           </div>
 
           {activeSite && (
             <div className="flex flex-wrap items-center gap-2.5 shrink-0">
-              <span className="font-mono font-bold text-[#22d3ee] text-xs sm:text-sm">
+              <span className="font-mono font-black text-[#1e7587] text-xs sm:text-sm">
                 {t.selectedLabel}: {activeSite.phone_number}
               </span>
               <button
                 onClick={() => onOpenReceipt(activeSite)}
-                className="retro-btn-petrol px-3 py-1.5 text-xs font-bold rounded-lg flex items-center gap-1.5 cursor-pointer active:scale-95"
+                className="comic-btn-pink px-3 py-1.5 text-xs font-black flex items-center gap-1.5 cursor-pointer active:scale-95"
               >
-                <FileText className="w-3.5 h-3.5 text-[#22d3ee]" />
+                <FileText className="w-3.5 h-3.5" />
                 <span>{t.viewVoucherBtn}</span>
               </button>
             </div>
